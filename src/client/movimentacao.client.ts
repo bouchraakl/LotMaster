@@ -7,7 +7,7 @@ import axios, { AxiosInstance } from "axios";
 export class MovimentacaoClient {
 
     private axiosClient: AxiosInstance;
-    
+
 
     constructor() {
         this.axiosClient = axios.create({
@@ -18,12 +18,12 @@ export class MovimentacaoClient {
         });
     }
 
-    public async findById(id:number): Promise<Movimentacao> {
+    public async findById(id: number): Promise<Movimentacao> {
 
         try {
             const response = await this.axiosClient.get<Movimentacao>(`/api/movimentacao?id=${id}`);
             return response.data;
-        }catch (error) {
+        } catch (error) {
             return Promise.reject(error);
         }
     }
@@ -31,38 +31,48 @@ export class MovimentacaoClient {
 
     public async findAll(): Promise<Movimentacao[]> {
         try {
-          const response = await this.axiosClient.get<Movimentacao[]>('/api/movimentacao/all');
-          return response.data;
+            const response = await this.axiosClient.get<Movimentacao[]>('/api/movimentacao/all');
+            return response.data;
         } catch (error) {
-          console.error(error);
-          return []; // Return an empty array if there's an error
+            console.error(error);
+            return []; // Return an empty array if there's an error
         }
-      }
+    }
 
-      public async findAllByOpen(): Promise<Movimentacao[]> {
+    public async findAllByOpen(): Promise<Movimentacao[]> {
         try {
-          const response = await this.axiosClient.get<Movimentacao[]>('/api/movimentacao/abertas');
-          return response.data;
+            const response = await this.axiosClient.get<Movimentacao[]>('/api/movimentacao/abertas');
+            return response.data;
         } catch (error) {
-          console.error(error);
-          return []; // Return an empty array if there's an error
+            console.error(error);
+            return []; // Return an empty array if there's an error
         }
-      }
+    }
+
+    public async findAllByClose(): Promise<Movimentacao[]> {
+        try {
+            const response = await this.axiosClient.get<Movimentacao[]>('/api/movimentacao/closed');
+            return response.data;
+        } catch (error) {
+            console.error(error);
+            return []; // Return an empty array if there's an error
+        }
+    }
 
     public async save(movimentacao: Movimentacao): Promise<Movimentacao> {
         try {
             const response = await this.axiosClient.post<Movimentacao>('/api/movimentacao', movimentacao);
             return response.data;
-        }catch (error) {
+        } catch (error) {
             return Promise.reject(error);
-        } 
+        }
     }
 
     public async update(movimentacao: Movimentacao): Promise<Movimentacao> {
         try {
             const response = await this.axiosClient.put<Movimentacao>(`${movimentacao.id}`, movimentacao);
             return response.data;
-        }catch (error) {
+        } catch (error) {
             return Promise.reject(error);
         }
     }
@@ -76,17 +86,17 @@ export class MovimentacaoClient {
     }
 
     public async findByFiltrosPaginado(pageRequest: PageRequest): Promise<PageResponse<Movimentacao>> {
-		try {
-			let requestPath = ''
+        try {
+            let requestPath = ''
 
-			requestPath += `?page=${pageRequest.currentPage}`
-			requestPath += `&size=${pageRequest.pageSize}`
-			requestPath += `&sort=${pageRequest.sortField === undefined ? '' : pageRequest.sortField},${pageRequest.direction}`
+            requestPath += `?page=${pageRequest.currentPage}`
+            requestPath += `&size=${pageRequest.pageSize}`
+            requestPath += `&sort=${pageRequest.sortField === undefined ? '' : pageRequest.sortField},${pageRequest.direction}`
 
-			return (await this.axiosClient.get<PageResponse<Movimentacao>>(requestPath, { params: { filtros: pageRequest.filter } })).data
-		} catch (error:any) { 
-			return Promise.reject(error.response) 
-		}
-	}
+            return (await this.axiosClient.get<PageResponse<Movimentacao>>(requestPath, { params: { filtros: pageRequest.filter } })).data
+        } catch (error: any) {
+            return Promise.reject(error.response)
+        }
+    }
 
 }
