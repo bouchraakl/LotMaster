@@ -102,7 +102,7 @@ export default defineComponent({
         return;
       }
 
-      try {
+      try { 
         const driverClient = new CondutorClient();
         await driverClient.delete(driver.id);
         this.drivers = this.drivers.filter((item) => item.id !== driver.id);

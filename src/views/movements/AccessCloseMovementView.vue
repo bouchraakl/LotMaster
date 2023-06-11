@@ -54,9 +54,9 @@ name: "AccessVehicleModelView",
 data() {
   return {
     moves: [] as Movimentacao[],
-    searchQuery: '',
+    searchQuery: '', 
   };
-},
+}, 
 computed: {
   closeFilter(): Movimentacao[] {
     if (!this.searchQuery) {

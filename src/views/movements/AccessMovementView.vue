@@ -22,7 +22,7 @@
         <tbody>
           <tr v-for="open in openFilter" :key="open.id">
             <td>{{ open.id }}</td>
-            <td>{{ open.ativo }}</td>
+            <td>{{ open.ativo }}</td> 
             <td>{{ formatDate(open.cadastro) }}</td>
             <td>{{ open.veiculo.id }}</td>
             <td>{{ open.condutor.id }}</td>
