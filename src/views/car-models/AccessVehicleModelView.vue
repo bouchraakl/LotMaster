@@ -1,15 +1,32 @@
 <template>
     <div class="access-content d-flex flex-column align-items-start justify-content-start">
-        <div class="header d-flex align-content-start justify-content-between">
+        <div class="header d-flex align-content-start justify-content-between m-0">
             <p class="title-pages">Access : Vehicle Models</p>
             <div class="search-container">
-                <input type="text" class="search-input" placeholder="Search..." v-model="searchQuery" />
+                <input type="text" class="search-input" placeholder="Search By Id or name ..." v-model="searchQuery" />
                 <i class="bi bi-search search-icon "></i>
             </div>
         </div>
+        <div class="filter d-flex align-items-center my-4 gap-5">
+      <div class="filter-container d-flex align-items-center gap-2">
+      <label for="year-filter">Year:</label>
+      <select id="year-filter" v-model="selectedYear" class="form-select" style="padding: 0.3rem 2rem 0.3rem 0.75rem;">
+        <option value="">All</option>
+        <option v-for="year in selectableYears" :value="year">{{ year }}</option>
+      </select>
+    </div>
+
+    <div class="filter-container d-flex align-items-center gap-2">
+      <label for="month-filter">Month:</label>
+      <select id="month-filter" v-model="selectedMonth" class="form-select">
+        <option value="">All</option>
+        <option v-for="month in 12" :value="month">{{ month }}</option>
+      </select>
+    </div>
+    </div>
             <table class="table table-sm table-bordered w-100">
         <thead>
-          <tr>
+          <tr> 
             <th scope="col">Id</th>
             <th scope="col">Active</th>
             <th scope="col">Register Date</th>
@@ -53,21 +70,45 @@ export default defineComponent({
     return {
       models: [] as Modelo[],
       searchQuery: '',
+      selectedYear: null as number | null,
+      selectedMonth: null as number | null,
     };
   },
   computed: {
     modelFilter(): Modelo[] {
-      if (!this.searchQuery) {
+      if (!this.searchQuery && !this.selectedYear && !this.selectedMonth) {
         return this.models;
-      } else {
+      }else {
+        const lowerCaseQuery = this.searchQuery.toLowerCase();
         return this.models.filter((model: Modelo) => {
-          return model.id.toString().includes(this.searchQuery) ||
-           model.ativo.toString().includes(this.searchQuery) ||
-            model.marca.nome.toString().includes(this.searchQuery) ||
-            model.nome.toString().includes(this.searchQuery);
+          const registerDate = new Date(model.cadastro);
+          const registerYear = registerDate.getFullYear();
+          const registerMonth = registerDate.getMonth() + 1; // Adding 1 because getMonth() returns zero-based month value
+
+          const matchesQuery = model.id.toString().toLowerCase().includes(lowerCaseQuery) ||
+            model.nome.toString().toLowerCase().includes(lowerCaseQuery) ||
+            model.marca.nome.toString().toLowerCase().includes(lowerCaseQuery);
+
+          if (this.selectedYear && this.selectedMonth) {
+            return matchesQuery && registerYear === this.selectedYear && registerMonth === this.selectedMonth;
+          } else if (this.selectedYear) {
+            return matchesQuery && registerYear === this.selectedYear;
+          } else if (this.selectedMonth) {
+            return matchesQuery && registerMonth === this.selectedMonth;
+          } else {
+            return matchesQuery;
+          }
         });
       }
+    },
+    selectableYears(): number[] {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let year = 2019; year <= currentYear; year++) {
+      years.push(year);
     }
+    return years;
+  },
   },
 
   mounted() {
