@@ -39,6 +39,16 @@ export class MovimentacaoClient {
         }
       }
 
+      public async findAllByOpen(): Promise<Movimentacao[]> {
+        try {
+          const response = await this.axiosClient.get<Movimentacao[]>('/api/movimentacao/abertas');
+          return response.data;
+        } catch (error) {
+          console.error(error);
+          return []; // Return an empty array if there's an error
+        }
+      }
+
     public async save(movimentacao: Movimentacao): Promise<Movimentacao> {
         try {
             const response = await this.axiosClient.post<Movimentacao>('/api/movimentacao', movimentacao);
