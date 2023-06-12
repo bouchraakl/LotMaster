@@ -41,11 +41,11 @@
           <td>{{ formatDate(brand.cadastro) }}</td>
           <td>{{ brand.nome }}</td>
           <td>
-            <div class="d-flex justify-content-center actions">
-              <button class="btn btn-sm btn-primary me-2" @click="editItem(brand)" style="width: 100px;height: 30px;">
-                <i class="bi bi-pencil-square"></i> Edit </button>
-              <button class="btn btn-sm btn-danger" @click="deleteItem(brand)" style="width: 100px;height: 30px;">
-                <i class="bi bi-trash"></i> Delete </button>
+            <div class="d-flex justify-content-center gap-2">
+              <button class="btn btn-sm btn-primary" @click="editItem(brand)" style="width: 45px;height: 30px;">
+                <i class="bi bi-pencil-square"></i></button>
+              <button class="btn btn-sm btn-danger" @click="deleteItem(brand)" style="width: 45px;height: 30px;">
+                <i class="bi bi-trash"></i></button>
             </div>
           </td>
         </tr>

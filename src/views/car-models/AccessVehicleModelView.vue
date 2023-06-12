@@ -43,11 +43,11 @@
             <td>{{ model.nome}}</td>
             <td>{{ model.marca.nome }}</td>
             <td>
-              <div class="d-flex justify-content-center actions">
-                <button class="btn btn-sm btn-primary me-2" @click="editItem(model)" style="width: 100px;height: 30px;">
-                  <i class="bi bi-pencil-square"></i> Edit </button>
-                <button class="btn btn-sm btn-danger" @click="deleteItem(model)" style="width: 100px;height: 30px;">
-                  <i class="bi bi-trash"></i> Delete </button>
+              <div class="d-flex justify-content-center gap-2">
+                <button class="btn btn-sm btn-primary" @click="editItem(model)" style="width: 45px;height: 30px;">
+                  <i class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-sm btn-danger" @click="deleteItem(model)" style="width: 45px;height: 30px;">
+                  <i class="bi bi-trash"></i></button>
               </div>
             </td>
           </tr>
