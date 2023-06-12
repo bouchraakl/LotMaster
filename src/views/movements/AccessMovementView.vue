@@ -52,13 +52,71 @@
                 <i class="bi bi-trash"></i></button>
               <button class="btn btn-sm btn-success" @click="closeItem(open)" style="width: 45px;height: 30px;">
                 <i class="bi bi-check-circle"></i></button>
-              <button class="btn btn-sm btn-info " @click="viewItem(open)" style="width: 45px;height: 30px;color: #fff;">
-                <i class="bi bi-eye"></i></button>
+              <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#details" style="width: 45px;height: 30px;color: #fff;font-weight: bold;"  @click="viewItem(open)">
+                <i class="bi bi-eye"></i>
+              </button>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
+    <!-- Modal -->
+    <div class="modal fade" id="details" tabindex="-1" aria-labelledby="details" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Movement Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body d-flex justify-content-between align-items-center">
+            <div class="modal-col d-flex flex-column" style="    text-align: start;">
+              <p>Movement ID :</p>
+              <p>Active :</p>
+              <p>Registration Date :</p>
+              <hr>
+              <p>Driver Name :</p>
+              <p>Driver CPF :</p>
+              <p>Driver Phone :</p>
+              <p>Driver Total Payed Hours :</p>
+              <p>Driver Discount Hours :</p>
+              <hr>
+              <p>Vehicle License Plate :</p>
+              <p>Vehicle Brand Name :</p>
+              <p>Vehicle Modal Name :</p>
+              <p>Vehicle Type :</p>
+              <p>Vehicle Year :</p>
+              <p>Vehicle Color :</p>
+              <hr>
+              <p>Entry Date :</p>
+            </div>
+            <div class="modal-col d-flex flex-column">
+              <p>{{ selectedMove?.id }}</p>
+              <p>{{ selectedMove?.ativo }}</p>
+              <p>{{ selectedMove?.cadastro }}</p>
+              <hr>
+              <p>{{ selectedMove?.condutor.nome }}</p>
+              <p>{{ selectedMove?.condutor.cpf }}</p>
+              <p>{{ selectedMove?.condutor.telefone }}</p>
+              <p>{{ selectedMove?.condutor.tempoPagoHoras }}</p>
+              <p>{{ selectedMove?.tempoDesconto }}</p>
+              <hr>
+              <p>{{ selectedMove?.veiculo.placa }}</p>
+              <p>{{ selectedMove?.veiculo.modelo.marca.nome }}</p>
+              <p>{{ selectedMove?.veiculo.modelo.nome }}</p>
+              <p>{{ selectedMove?.veiculo.tipo }}</p>
+              <p>{{ selectedMove?.veiculo.ano }}</p>
+              <p>{{ selectedMove?.veiculo.cor }}</p>
+              <hr>
+              <p>{{ selectedMove?.entrada }}</p>
+            </div>
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -76,6 +134,7 @@ export default defineComponent({
       searchQuery: '',
       selectedYear: null as number | null,
       selectedMonth: null as number | null,
+      selectedMove: null as Movimentacao | null,
     };
   },
   computed: {
@@ -89,7 +148,7 @@ export default defineComponent({
           const registerYear = registerDate.getFullYear();
           const registerMonth = registerDate.getMonth() + 1; // Adding 1 because getMonth() returns zero-based month value
 
-          const matchesQuery = 
+          const matchesQuery =
             move.veiculo.placa.toLowerCase().includes(lowerCaseQuery) ||
             move.condutor.nome.toLowerCase().includes(lowerCaseQuery);
 
@@ -106,13 +165,13 @@ export default defineComponent({
       }
     },
     selectableYears(): number[] {
-    const currentYear = new Date().getFullYear();
-    const years = [];
-    for (let year = 2019; year <= currentYear; year++) {
-      years.push(year);
-    }
-    return years;
-  },
+      const currentYear = new Date().getFullYear();
+      const years = [];
+      for (let year = 2019; year <= currentYear; year++) {
+        years.push(year);
+      }
+      return years;
+    },
 
   },
 
@@ -162,6 +221,8 @@ export default defineComponent({
     },
 
     async viewItem(move: Movimentacao) {
+      this.selectedMove = move; // Set the selected move for the modal
+
     }
   },
 });
