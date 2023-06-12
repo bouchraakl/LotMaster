@@ -1,44 +1,65 @@
 <template>
-    <div class="access-content d-flex flex-column align-items-start justify-content-start">
-        <div class="header d-flex align-content-start justify-content-between">
-            <p class="title-pages">Access : Open Movements</p>
-            <div class="search-container">
-                <input type="text" class="search-input" placeholder="Search..." v-model="searchQuery" />
-                <i class="bi bi-search search-icon "></i>
-            </div>
-        </div>
-            <table class="table table-sm table-bordered w-100">
-        <thead>
-          <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Active</th>
-            <th scope="col">Registration Date</th>
-            <th scope="col">Vehicle Id</th>
-            <th scope="col">Conductor Id</th>
-            <th scope="col">Entry Date</th>
-            <th scope="col">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="open in openFilter" :key="open.id">
-            <td>{{ open.id }}</td>
-            <td>{{ open.ativo }}</td> 
-            <td>{{ formatDate(open.cadastro) }}</td>
-            <td>{{ open.veiculo.id }}</td>
-            <td>{{ open.condutor.id }}</td>
-            <td>{{ formatDate(open.entrada) }}</td>
-            <td>
-              <div class="d-flex justify-content-center actions">
-                <button class="btn btn-sm btn-primary me-2" @click="editItem(open)" style="width: 100px;height: 30px;">
-                  <i class="bi bi-pencil-square"></i> Edit </button>
-                <button class="btn btn-sm btn-danger" @click="deleteItem(open)" style="width: 100px;height: 30px;">
-                  <i class="bi bi-trash"></i> Delete </button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+  <div class="access-content d-flex flex-column align-items-start justify-content-start">
+    <div class="header d-flex align-content-start justify-content-between m-0">
+      <p class="title-pages">Access : Open Movements</p>
+      <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search By license plate or name..." v-model="searchQuery" />
+        <i class="bi bi-search search-icon "></i>
+      </div>
     </div>
+    <div class="filter d-flex align-items-center my-4 gap-5">
+      <div class="filter-container d-flex align-items-center gap-2">
+        <label for="year-filter">Year:</label>
+        <select id="year-filter" v-model="selectedYear" class="form-select" style="padding: 0.3rem 2rem 0.3rem 0.75rem;">
+          <option value="">All</option>
+          <option v-for="year in selectableYears" :value="year">{{ year }}</option>
+        </select>
+      </div>
+
+      <div class="filter-container d-flex align-items-center gap-2">
+        <label for="month-filter">Month:</label>
+        <select id="month-filter" v-model="selectedMonth" class="form-select">
+          <option value="">All</option>
+          <option v-for="month in 12" :value="month">{{ month }}</option>
+        </select>
+      </div>
+    </div>
+    <table class="table table-sm table-bordered w-100">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Active</th>
+          <th scope="col">Registration Date</th>
+          <th scope="col">License Plate</th>
+          <th scope="col">Conductor Name</th>
+          <th scope="col">Entry Date</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="open in openFilter" :key="open.id">
+          <td>{{ open.id }}</td>
+          <td>{{ open.ativo }}</td>
+          <td>{{ formatDate(open.cadastro) }}</td>
+          <td>{{ open.veiculo.placa }}</td>
+          <td>{{ open.condutor.nome }}</td>
+          <td>{{ formatDate(open.entrada) }}</td>
+          <td>
+            <div class="d-flex justify-content-center gap-2">
+              <button class="btn btn-sm btn-primary" @click="editItem(open)" style="width: 45px;height: 30px;">
+                <i class="bi bi-pencil-square"></i></button>
+              <button class="btn btn-sm btn-danger" @click="deleteItem(open)" style="width: 45px;height: 30px;">
+                <i class="bi bi-trash"></i></button>
+              <button class="btn btn-sm btn-success" @click="closeItem(open)" style="width: 45px;height: 30px;">
+                <i class="bi bi-check-circle"></i></button>
+              <button class="btn btn-sm btn-info " @click="viewItem(open)" style="width: 45px;height: 30px;color: #fff;">
+                <i class="bi bi-eye"></i></button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script lang="ts">
@@ -53,23 +74,46 @@ export default defineComponent({
     return {
       moves: [] as Movimentacao[],
       searchQuery: '',
+      selectedYear: null as number | null,
+      selectedMonth: null as number | null,
     };
   },
   computed: {
     openFilter(): Movimentacao[] {
-      if (!this.searchQuery) {
+      if (!this.searchQuery && !this.selectedYear && !this.selectedMonth) {
         return this.moves;
       } else {
+        const lowerCaseQuery = this.searchQuery.toLowerCase();
         return this.moves.filter((move: Movimentacao) => {
-          return move.id.toString().includes(this.searchQuery) ||
-           move.ativo.toString().includes(this.searchQuery) ||
-            move.cadastro.toString().includes(this.searchQuery) ||
-            move.veiculo.id.toString().includes(this.searchQuery) ||
-            move.condutor.id.toString().includes(this.searchQuery) ||
-            move.entrada.toString().includes(this.searchQuery);
+          const registerDate = new Date(move.cadastro);
+          const registerYear = registerDate.getFullYear();
+          const registerMonth = registerDate.getMonth() + 1; // Adding 1 because getMonth() returns zero-based month value
+
+          const matchesQuery = 
+            move.veiculo.placa.toLowerCase().includes(lowerCaseQuery) ||
+            move.condutor.nome.toLowerCase().includes(lowerCaseQuery);
+
+          if (this.selectedYear && this.selectedMonth) {
+            return matchesQuery && registerYear === this.selectedYear && registerMonth === this.selectedMonth;
+          } else if (this.selectedYear) {
+            return matchesQuery && registerYear === this.selectedYear;
+          } else if (this.selectedMonth) {
+            return matchesQuery && registerMonth === this.selectedMonth;
+          } else {
+            return matchesQuery;
+          }
         });
       }
+    },
+    selectableYears(): number[] {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let year = 2019; year <= currentYear; year++) {
+      years.push(year);
     }
+    return years;
+  },
+
   },
 
   mounted() {
@@ -110,8 +154,14 @@ export default defineComponent({
     async editItem(move: Movimentacao) {
 
       const brandId = move.id;
-      this.$router.push({ name: "/edit-movement", params: {brandId} });
-      
+      this.$router.push({ name: "/edit-movement", params: { brandId } });
+
+    },
+
+    async closeItem(move: Movimentacao) {
+    },
+
+    async viewItem(move: Movimentacao) {
     }
   },
 });
@@ -119,7 +169,7 @@ export default defineComponent({
 
 <style scoped>
 .header {
-    margin-left: 30px;
-    width: 100%;
+  margin-left: 30px;
+  width: 100%;
 }
 </style>
