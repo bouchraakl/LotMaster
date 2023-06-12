@@ -52,13 +52,85 @@
                 <i class="bi bi-pencil-square"></i></button>
               <button class="btn btn-sm btn-danger" @click="deleteItem(close)" style="width: 45px;height: 30px;">
                 <i class="bi bi-trash"></i></button>
-              <button class="btn btn-sm btn-info " @click="viewItem(close)" style="width: 45px;height: 30px;color: #fff;">
-                <i class="bi bi-eye"></i></button>
+                <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#details" style="width: 45px;height: 30px;color: #fff;font-weight: bold;"  @click="viewItem(close)">
+                <i class="bi bi-eye"></i>
+              </button>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
+        <!-- Modal -->
+        <div class="modal fade" id="details" tabindex="-1" aria-labelledby="details" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Movement Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body d-flex justify-content-between align-items-center">
+            <div class="modal-col d-flex flex-column" style="    text-align: start;">
+              <p>Movement ID :</p>
+              <p>Active :</p>
+              <p>Registration Date :</p>
+              <hr>
+              <p>Driver Name :</p>
+              <p>Driver CPF :</p>
+              <p>Driver Phone :</p>
+              <p>Driver Total Payed Hours :</p>
+              <p>Driver Discount Hours :</p>
+              <hr>
+              <p>Vehicle License Plate :</p>
+              <p>Vehicle Brand Name :</p>
+              <p>Vehicle Modal Name :</p>
+              <p>Vehicle Type :</p>
+              <p>Vehicle Year :</p>
+              <p>Vehicle Color :</p>
+              <hr>
+              <p>Entry Date :</p>
+              <p>Exit Date :</p>
+              <p>Total Hours :</p>
+              <p>Total Penalty Hours :</p>
+              <p>Total Discount Hours :</p>
+              <p>Penalty Value :</p>
+              <p>Discount Value :</p>
+              <p>Total Value :</p>
+            </div>
+            <div class="modal-col d-flex flex-column">
+              <p>{{ selectedMove?.id }}</p>
+              <p>{{ selectedMove?.ativo }}</p>
+              <p>{{ selectedMove?.cadastro }}</p>
+              <hr>
+              <p>{{ selectedMove?.condutor.nome }}</p>
+              <p>{{ selectedMove?.condutor.cpf }}</p>
+              <p>{{ selectedMove?.condutor.telefone }}</p>
+              <p>{{ selectedMove?.condutor.tempoPagoHoras }}</p>
+              <p>{{ selectedMove?.tempoDesconto }}</p>
+              <hr>
+              <p>{{ selectedMove?.veiculo.placa }}</p>
+              <p>{{ selectedMove?.veiculo.modelo.marca.nome }}</p>
+              <p>{{ selectedMove?.veiculo.modelo.nome }}</p>
+              <p>{{ selectedMove?.veiculo.tipo }}</p>
+              <p>{{ selectedMove?.veiculo.ano }}</p>
+              <p>{{ selectedMove?.veiculo.cor }}</p>
+              <hr>
+              <p>{{ selectedMove?.entrada }}</p>
+              <p>{{ selectedMove?.saida }}</p>
+              <p>{{ selectedMove?.tempoHoras }}</p>
+              <p>{{ selectedMove?.tempoMultaHoras}}</p>
+              <p>{{ selectedMove?.tempoDesconto }}</p>
+              <p>{{ selectedMove?.valorMulta }}</p>
+              <p>{{ selectedMove?.valorDesconto }}</p>
+              <p>{{ selectedMove?.valorTotal }}</p>
+            </div>
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -76,6 +148,7 @@ export default defineComponent({
       searchQuery: '',
       selectedYear: null as number | null,
       selectedMonth: null as number | null,
+      selectedMove: null as Movimentacao | null,
     };
   },
   computed: {
@@ -157,7 +230,9 @@ export default defineComponent({
 
     },
 
-    async viewItem(move: Movimentacao) {}
+    async viewItem(move: Movimentacao) {
+      this.selectedMove = move; // Set the selected move for the modal
+    }
   },
 });
 </script>
