@@ -21,7 +21,7 @@ export class VeiculoClient {
     public async findById(id:number): Promise<Veiculo> {
 
         try {
-            const response = await this.axiosClient.get<Veiculo>(`/api/veiculo?id=${id}`);
+            const response = await this.axiosClient.get<Veiculo>(`/api/veiculo/${id}`);
             return response.data;
         }catch (error) {
             return Promise.reject(error);
@@ -69,11 +69,10 @@ export class VeiculoClient {
 		try {
 			let requestPath = ''
 
-			requestPath += `?page=${pageRequest.currentPage}`
+			requestPath += `page=${pageRequest.currentPage}`
 			requestPath += `&size=${pageRequest.pageSize}`
-			requestPath += `&sort=${pageRequest.sortField === undefined ? '' : pageRequest.sortField},${pageRequest.direction}`
 
-			return (await this.axiosClient.get<PageResponse<Veiculo>>(requestPath, { params: { filtros: pageRequest.filter } })).data
+			return (await this.axiosClient.get<PageResponse<Veiculo>>(`/api/veiculo?${requestPath}`)).data
 		} catch (error:any) { 
 			return Promise.reject(error.response) 
 		}

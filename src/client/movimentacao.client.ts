@@ -21,7 +21,7 @@ export class MovimentacaoClient {
     public async findById(id: number): Promise<Movimentacao> {
 
         try {
-            const response = await this.axiosClient.get<Movimentacao>(`/api/movimentacao?id=${id}`);
+            const response = await this.axiosClient.get<Movimentacao>(`/api/movimentacao/${id}`);
             return response.data;
         } catch (error) {
             return Promise.reject(error);
@@ -86,17 +86,16 @@ export class MovimentacaoClient {
     }
 
     public async findByFiltrosPaginado(pageRequest: PageRequest): Promise<PageResponse<Movimentacao>> {
-        try {
-            let requestPath = ''
+		try {
+			let requestPath = ''
 
-            requestPath += `?page=${pageRequest.currentPage}`
-            requestPath += `&size=${pageRequest.pageSize}`
-            requestPath += `&sort=${pageRequest.sortField === undefined ? '' : pageRequest.sortField},${pageRequest.direction}`
+			requestPath += `page=${pageRequest.currentPage}`
+			requestPath += `&size=${pageRequest.pageSize}`
 
-            return (await this.axiosClient.get<PageResponse<Movimentacao>>(requestPath, { params: { filtros: pageRequest.filter } })).data
-        } catch (error: any) {
-            return Promise.reject(error.response)
-        }
-    }
+			return (await this.axiosClient.get<PageResponse<Movimentacao>>(`/api/movimentacao?${requestPath}`)).data
+		} catch (error:any) { 
+			return Promise.reject(error.response) 
+		}
+	}
 
 }

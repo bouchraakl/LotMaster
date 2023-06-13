@@ -21,7 +21,7 @@ export class CondutorClient {
     public async findById(id:number): Promise<Condutor> {
 
         try {
-            const response = await this.axiosClient.get<Condutor>(`/api/condutor?id=${id}`);
+            const response = await this.axiosClient.get<Condutor>(`/api/condutor/${id}`);
             return response.data;
         }catch (error) {
             return Promise.reject(error);
@@ -41,7 +41,7 @@ export class CondutorClient {
 
     public async save(condutor: Condutor): Promise<Condutor> {
         try {
-            const response = await this.axiosClient.post<Condutor>('/api/veiculo', condutor);
+            const response = await this.axiosClient.post<Condutor>('/api/condutor', condutor);
             return response.data;
         }catch (error) {
             return Promise.reject(error);
@@ -69,11 +69,10 @@ export class CondutorClient {
 		try {
 			let requestPath = ''
 
-			requestPath += `?page=${pageRequest.currentPage}`
+			requestPath += `page=${pageRequest.currentPage}`
 			requestPath += `&size=${pageRequest.pageSize}`
-			requestPath += `&sort=${pageRequest.sortField === undefined ? '' : pageRequest.sortField},${pageRequest.direction}`
 
-			return (await this.axiosClient.get<PageResponse<Condutor>>(requestPath, { params: { filtros: pageRequest.filter } })).data
+			return (await this.axiosClient.get<PageResponse<Condutor>>(`/api/condutor?${requestPath}`)).data
 		} catch (error:any) { 
 			return Promise.reject(error.response) 
 		}

@@ -23,7 +23,7 @@ export class MarcaClient {
     public async findById(id:number): Promise<Marca> {
 
         try {
-            const response = await this.axiosClient.get<Marca>(`/api/marca?id=${id}`);
+            const response = await this.axiosClient.get<Marca>(`/api/marca/${id}`);
             return response.data;
         }catch (error) {
             return Promise.reject(error);
@@ -71,11 +71,10 @@ export class MarcaClient {
 		try {
 			let requestPath = ''
 
-			requestPath += `?page=${pageRequest.currentPage}`
+			requestPath += `page=${pageRequest.currentPage}`
 			requestPath += `&size=${pageRequest.pageSize}`
-			requestPath += `&sort=${pageRequest.sortField === undefined ? '' : pageRequest.sortField},${pageRequest.direction}`
 
-			return (await this.axiosClient.get<PageResponse<Marca>>(requestPath, { params: { filtros: pageRequest.filter } })).data
+			return (await this.axiosClient.get<PageResponse<Marca>>(`/api/marca?${requestPath}`)).data
 		} catch (error:any) { 
 			return Promise.reject(error.response) 
 		}
