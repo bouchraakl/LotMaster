@@ -25,7 +25,7 @@
               <option value="San Francisco"></option>
             </datalist>
           </div>
-          <router-link to="/register-conductor" class="align-self-end">
+          <router-link to="/register-vehicle" class="align-self-end">
             <button class="moveBtn m-0">Or Register New Veichle</button>
           </router-link>
         </div>
