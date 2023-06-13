@@ -1,59 +1,76 @@
 <template>
-    <div class="access-content d-flex flex-column align-items-start justify-content-start">
-        <div class="header d-flex align-content-start justify-content-between m-0">
-            <p class="title-pages">Access : Vehicle Models</p>
-            <div class="search-container">
-                <input type="text" class="search-input" placeholder="Search By Id or name ..." v-model="searchQuery" />
-                <i class="bi bi-search search-icon "></i>
-            </div>
-        </div>
-        <div class="filter d-flex align-items-center my-4 gap-4">
+  <div class="access-content d-flex flex-column align-items-start justify-content-start">
+    <div class="header d-flex align-content-start justify-content-between m-0">
+      <p class="title-pages">Access : Vehicle Models</p>
+      <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search By Id or name ..." v-model="searchQuery" />
+        <i class="bi bi-search search-icon "></i>
+      </div>
+    </div>
+    <div class="filter d-flex align-items-center my-4 gap-4">
       <div class="filter-container d-flex align-items-center gap-2">
-      <label for="year-filter">Year:</label>
-      <select id="year-filter" v-model="selectedYear" class="form-select" style="padding: 0.3rem 2rem 0.3rem 0.75rem;">
-        <option value="">All</option>
-        <option v-for="year in selectableYears" :value="year">{{ year }}</option>
-      </select>
-    </div>
+        <label for="year-filter">Year:</label>
+        <select id="year-filter" v-model="selectedYear" class="form-select" style="padding: 0.3rem 2rem 0.3rem 0.75rem;">
+          <option value="">All</option>
+          <option v-for="year in selectableYears" :value="year">{{ year }}</option>
+        </select>
+      </div>
 
-    <div class="filter-container d-flex align-items-center gap-2">
-      <label for="month-filter">Month:</label>
-      <select id="month-filter" v-model="selectedMonth" class="form-select">
-        <option value="">All</option>
-        <option v-for="month in 12" :value="month">{{ month }}</option>
-      </select>
+      <div class="filter-container d-flex align-items-center gap-2">
+        <label for="month-filter">Month:</label>
+        <select id="month-filter" v-model="selectedMonth" class="form-select">
+          <option value="">All</option>
+          <option v-for="month in 12" :value="month">{{ month }}</option>
+        </select>
+      </div>
     </div>
+    <table class="table table-sm table-bordered w-100">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Active</th>
+          <th scope="col">Register Date</th>
+          <th scope="col">Vehicle Model Name</th>
+          <th scope="col">Vehicle Brand Name</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="model in modelFilter" :key="model.id">
+          <td> {{ model.id }} </td>
+          <td>{{ model.ativo }}</td>
+          <td>{{ formatDate(model.cadastro) }}</td>
+          <td>{{ model.nome }}</td>
+          <td>{{ model.marca.nome }}</td>
+          <td>
+            <div class="d-flex justify-content-center gap-2">
+              <button class="btn btn-sm btn-primary" @click="editItem(model)" style="width: 45px;height: 30px;">
+                <i class="bi bi-pencil-square"></i></button>
+              <button class="btn btn-sm btn-danger" @click="deleteItem(model)" style="width: 45px;height: 30px;">
+                <i class="bi bi-trash"></i></button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <!-- Add pagination controls -->
+    <div class="pagination-container align-self-end">
+      <ul class="pagination">
+        <li class="page-item" :class="{ disabled: currentPage === 0 }">
+          <a class="page-link" href="#" aria-label="Previous" @click="previousPage"
+            style="color: #3C3C43;background-color: #B5C2C9;">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item" :disabled="modelFilter.length < pageSize">
+          <a class="page-link" href="#" aria-label="Next" @click="nextPage"
+            style="color: #3C3C43;background-color: #B5C2C9;">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
     </div>
-            <table class="table table-sm table-bordered w-100">
-        <thead>
-          <tr> 
-            <th scope="col">Id</th>
-            <th scope="col">Active</th>
-            <th scope="col">Register Date</th>
-            <th scope="col">Vehicle Model Name</th>
-            <th scope="col">Vehicle Brand Name</th>
-            <th scope="col">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="model in modelFilter" :key="model.id">
-            <td> {{ model.id }} </td>
-            <td>{{ model.ativo }}</td>
-            <td>{{ formatDate(model.cadastro) }}</td>
-            <td>{{ model.nome}}</td>
-            <td>{{ model.marca.nome }}</td>
-            <td>
-              <div class="d-flex justify-content-center gap-2">
-                <button class="btn btn-sm btn-primary" @click="editItem(model)" style="width: 45px;height: 30px;">
-                  <i class="bi bi-pencil-square"></i></button>
-                <button class="btn btn-sm btn-danger" @click="deleteItem(model)" style="width: 45px;height: 30px;">
-                  <i class="bi bi-trash"></i></button>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -63,6 +80,8 @@ import { Modelo } from "@/model/modelo";
 import { MarcaClient } from "@/client/marca.client";
 import { ModeloClient } from "@/client/modelo.client";
 import { Marca } from "@/model/marca";
+import { PageRequest } from "@/model/pagesModel/page-request";
+import { PageResponse } from "@/model/pagesModel/page-response";
 
 export default defineComponent({
   name: "AccessVehicleModelView",
@@ -72,13 +91,15 @@ export default defineComponent({
       searchQuery: '',
       selectedYear: null as number | null,
       selectedMonth: null as number | null,
+      currentPage: 0,
+      pageSize: 5,
     };
   },
   computed: {
     modelFilter(): Modelo[] {
       if (!this.searchQuery && !this.selectedYear && !this.selectedMonth) {
         return this.models;
-      }else {
+      } else {
         const lowerCaseQuery = this.searchQuery.toLowerCase();
         return this.models.filter((model: Modelo) => {
           const registerDate = new Date(model.cadastro);
@@ -102,13 +123,13 @@ export default defineComponent({
       }
     },
     selectableYears(): number[] {
-    const currentYear = new Date().getFullYear();
-    const years = [];
-    for (let year = 2019; year <= currentYear; year++) {
-      years.push(year);
-    }
-    return years;
-  },
+      const currentYear = new Date().getFullYear();
+      const years = [];
+      for (let year = 2019; year <= currentYear; year++) {
+        years.push(year);
+      }
+      return years;
+    },
   },
 
   mounted() {
@@ -117,8 +138,13 @@ export default defineComponent({
   methods: {
     async fetchModels() {
       try {
-        const modeloClient = new ModeloClient();
-        this.models = await modeloClient.findAll();
+        const pageRequest = new PageRequest();
+        pageRequest.currentPage = this.currentPage;
+        pageRequest.pageSize = this.pageSize;
+
+        const modelClient = new ModeloClient();
+        const pageResponse: PageResponse<Modelo> = await modelClient.findByFiltrosPaginado(pageRequest);
+        this.models = pageResponse.content;
       } catch (error) {
         console.error(error);
       }
@@ -149,16 +175,30 @@ export default defineComponent({
     async editItem(model: Modelo) {
 
       const brandId = model.id;
-      this.$router.push({ name: "edit-vehicleModel", params: {brandId} });
-      
-    }
+      this.$router.push({ name: "edit-vehicleModel", params: { brandId } });
+
+    },
+
+    previousPage() {
+      if (this.currentPage > 0) {
+        this.currentPage--;
+        this.fetchModels();
+      }
+    },
+
+    nextPage() {
+      if (this.modelFilter.length === this.pageSize) {
+        this.currentPage++;
+        this.fetchModels();
+      }
+    },
   },
 });
 </script>
 
 <style scoped>
 .header {
-    margin-left: 30px;
-    width: 100%;
+  margin-left: 30px;
+  width: 100%;
 }
 </style>

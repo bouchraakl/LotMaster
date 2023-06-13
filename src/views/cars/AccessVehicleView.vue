@@ -77,6 +77,23 @@
         </tr>
       </tbody>
     </table>
+    <!-- Add pagination controls -->
+    <div class="pagination-container align-self-end">
+      <ul class="pagination">
+        <li class="page-item" :class="{ disabled: currentPage === 0 }">
+          <a class="page-link" href="#" aria-label="Previous" @click="previousPage"
+            style="color: #3C3C43;background-color: #B5C2C9;">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item" :disabled="carFilter.length < pageSize">
+          <a class="page-link" href="#" aria-label="Next" @click="nextPage"
+            style="color: #3C3C43;background-color: #B5C2C9;">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -87,6 +104,10 @@ import { Veiculo } from "@/model/veiculo";
 import { VeiculoClient } from "@/client/veiculo.client";
 import { Tipo } from "@/model/tipo";
 import { Cor } from "@/model/cor";
+import { ModeloClient } from "@/client/modelo.client";
+import { Modelo } from "@/model/modelo";
+import { PageRequest } from "@/model/pagesModel/page-request";
+import { PageResponse } from "@/model/pagesModel/page-response";
 
 export default defineComponent({
   name: "AccessVehicleModelView",
@@ -98,6 +119,8 @@ export default defineComponent({
       selectedMonth: null as number | null,
       selectedTipo: null as Tipo | null,
       selectedCores: null as Cor | null,
+      currentPage: 0,
+      pageSize: 5,
     };
   },
   computed: {
@@ -142,14 +165,14 @@ export default defineComponent({
       return years;
     },
 
-    selectableTipos(): string[]  {
+    selectableTipos(): string[] {
       const tipos = Object.values(Tipo);
       return tipos.map((tipo) => tipo.toUpperCase());
     },
 
 
     availableCores(): string[] {
-      const cores =  Object.values(Cor);
+      const cores = Object.values(Cor);
       return cores.map((core) => core.toUpperCase());
     },
 
@@ -161,10 +184,29 @@ export default defineComponent({
   methods: {
     async fetchCar() {
       try {
+        const pageRequest = new PageRequest();
+        pageRequest.currentPage = this.currentPage;
+        pageRequest.pageSize = this.pageSize;
+
         const veiculoClient = new VeiculoClient();
-        this.cars = await veiculoClient.findAll();
+        const pageResponse: PageResponse<Veiculo> = await veiculoClient.findByFiltrosPaginado(pageRequest);
+        this.cars = pageResponse.content;
       } catch (error) {
         console.error(error);
+      }
+    },
+
+    previousPage() {
+      if (this.currentPage > 0) {
+        this.currentPage--;
+        this.fetchCar();
+      }
+    },
+
+    nextPage() {
+      if (this.carFilter.length === this.pageSize) {
+        this.currentPage++;
+        this.fetchCar();
       }
     },
 

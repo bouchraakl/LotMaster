@@ -59,6 +59,23 @@
         </tr>
       </tbody>
     </table>
+    <!-- Add pagination controls -->
+    <div class="pagination-container align-self-end">
+      <ul class="pagination">
+        <li class="page-item" :class="{ disabled: currentPage === 0 }">
+          <a class="page-link" href="#" aria-label="Previous" @click="previousPage"
+            style="color: #3C3C43;background-color: #B5C2C9;">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item" :disabled="driverFilter.length < pageSize">
+          <a class="page-link" href="#" aria-label="Next" @click="nextPage"
+            style="color: #3C3C43;background-color: #B5C2C9;">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -67,6 +84,10 @@ import { computed, defineComponent } from "vue";
 import axios from "axios";
 import { Condutor } from "@/model/condutor";
 import { CondutorClient } from "@/client/condutor.client";
+import { VeiculoClient } from "@/client/veiculo.client";
+import { PageRequest } from "@/model/pagesModel/page-request";
+import { PageResponse } from "@/model/pagesModel/page-response";
+import { Veiculo } from "@/model/veiculo";
 
 export default defineComponent({
   name: "AccessVehicleModelView",
@@ -76,6 +97,8 @@ export default defineComponent({
       searchQuery: '',
       selectedYear: null as number | null,
       selectedMonth: null as number | null,
+      currentPage: 0,
+      pageSize: 5,
     };
   },
   computed: {
@@ -121,10 +144,29 @@ export default defineComponent({
   methods: {
     async fetchDriver() {
       try {
-        const driverClient = new CondutorClient();
-        this.drivers = await driverClient.findAll();
+        const pageRequest = new PageRequest();
+        pageRequest.currentPage = this.currentPage;
+        pageRequest.pageSize = this.pageSize;
+
+        const conductorClient = new CondutorClient();
+        const pageResponse: PageResponse<Condutor> = await conductorClient.findByFiltrosPaginado(pageRequest);
+        this.drivers = pageResponse.content;
       } catch (error) {
         console.error(error);
+      }
+    },
+
+    previousPage() {
+      if (this.currentPage > 0) {
+        this.currentPage--;
+        this.fetchDriver();
+      }
+    },
+
+    nextPage() {
+      if (this.driverFilter.length === this.pageSize) {
+        this.currentPage++;
+        this.fetchDriver();
       }
     },
 

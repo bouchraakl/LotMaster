@@ -52,7 +52,8 @@
                 <i class="bi bi-pencil-square"></i></button>
               <button class="btn btn-sm btn-danger" @click="deleteItem(close)" style="width: 45px;height: 30px;">
                 <i class="bi bi-trash"></i></button>
-                <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#details" style="width: 45px;height: 30px;color: #fff;font-weight: bold;"  @click="viewItem(close)">
+              <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#details"
+                style="width: 45px;height: 30px;color: #fff;font-weight: bold;" @click="viewItem(close)">
                 <i class="bi bi-eye"></i>
               </button>
             </div>
@@ -60,8 +61,8 @@
         </tr>
       </tbody>
     </table>
-        <!-- Modal -->
-        <div class="modal fade" id="details" tabindex="-1" aria-labelledby="details" aria-hidden="true">
+    <!-- Modal -->
+    <div class="modal fade" id="details" tabindex="-1" aria-labelledby="details" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -117,19 +118,36 @@
               <p>{{ selectedMove?.entrada }}</p>
               <p>{{ selectedMove?.saida }}</p>
               <p>{{ selectedMove?.tempoHoras }}</p>
-              <p>{{ selectedMove?.tempoMultaHoras}}</p>
+              <p>{{ selectedMove?.tempoMultaHoras }}</p>
               <p>{{ selectedMove?.tempoDesconto }}</p>
               <p>{{ selectedMove?.valorMulta }}</p>
               <p>{{ selectedMove?.valorDesconto }}</p>
               <p>{{ selectedMove?.valorTotal }}</p>
             </div>
-            
+
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
       </div>
+    </div>
+    <!-- Add pagination controls -->
+    <div class="pagination-container align-self-end">
+      <ul class="pagination">
+        <li class="page-item" :class="{ disabled: currentPage === 0 }">
+          <a class="page-link" href="#" aria-label="Previous" @click="previousPage"
+            style="color: #3C3C43;background-color: #B5C2C9;">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item" :disabled="closeFilter.length < pageSize">
+          <a class="page-link" href="#" aria-label="Next" @click="nextPage"
+            style="color: #3C3C43;background-color: #B5C2C9;">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -139,6 +157,10 @@ import { computed, defineComponent } from "vue";
 import axios from "axios";
 import { Movimentacao } from "@/model/movimentacao";
 import { MovimentacaoClient } from "@/client/movimentacao.client";
+import { VeiculoClient } from "@/client/veiculo.client";
+import { PageRequest } from "@/model/pagesModel/page-request";
+import { PageResponse } from "@/model/pagesModel/page-response";
+import { Veiculo } from "@/model/veiculo";
 
 export default defineComponent({
   name: "AccessVehicleModelView",
@@ -149,6 +171,8 @@ export default defineComponent({
       selectedYear: null as number | null,
       selectedMonth: null as number | null,
       selectedMove: null as Movimentacao | null,
+      currentPage: 0,
+      pageSize: 5,
     };
   },
   computed: {
@@ -194,10 +218,29 @@ export default defineComponent({
   methods: {
     async fetchMoves() {
       try {
+        const pageRequest = new PageRequest();
+        pageRequest.currentPage = this.currentPage;
+        pageRequest.pageSize = this.pageSize;
+
         const moveClient = new MovimentacaoClient();
-        this.moves = await moveClient.findAllByClose();
+        const pageResponse: PageResponse<Movimentacao> = await moveClient.findByFiltrosPaginado(pageRequest);
+        this.moves = pageResponse.content;
       } catch (error) {
         console.error(error);
+      }
+    },
+
+    previousPage() {
+      if (this.currentPage > 0) {
+        this.currentPage--;
+        this.fetchMoves();
+      }
+    },
+
+    nextPage() {
+      if (this.closeFilter.length === this.pageSize) {
+        this.currentPage++;
+        this.fetchMoves();
       }
     },
 
