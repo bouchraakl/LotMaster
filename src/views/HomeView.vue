@@ -45,7 +45,7 @@
       </div>
       <div class="card moves d-flex flex-column justify-content-between align-items-center">
         <router-link to="/register-movement">
-          <button class="button moveBtn">Register Movement</button>
+          <button class="button moveBtn">Open Movement</button>
         </router-link>
       </div>
 
