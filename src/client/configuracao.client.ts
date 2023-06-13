@@ -65,18 +65,4 @@ export class ConfiguracaoClient {
         }
     }
 
-    public async findByFiltrosPaginado(pageRequest: PageRequest): Promise<PageResponse<Configuracao>> {
-		try {
-			let requestPath = ''
-
-			requestPath += `?page=${pageRequest.currentPage}`
-			requestPath += `&size=${pageRequest.pageSize}`
-			requestPath += `&sort=${pageRequest.sortField === undefined ? '' : pageRequest.sortField},${pageRequest.direction}`
-
-			return (await this.axiosClient.get<PageResponse<Configuracao>>(requestPath, { params: { filtros: pageRequest.filter } })).data
-		} catch (error:any) { 
-			return Promise.reject(error.response) 
-		}
-	}
-
 }
