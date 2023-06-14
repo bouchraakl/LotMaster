@@ -71,7 +71,7 @@
         <div class="footer d-flex flex-column align-self-start">
           <p class="footerTitle">Total Day Win</p>
           <div class="gainsMoney d-flex justify-content-between align-items-center gap-3">
-            <span class="moneyGain">$00.00</span>
+            <span class="moneyGain">${{ dayGain }}</span>
             <i class="bi bi-arrow-down-up"></i>
           </div>
         </div>
@@ -93,17 +93,22 @@ export default defineComponent({
       formattedDate: '',
       movimentacoes: [] as Movimentacao[],
       moveOpen: [] as Movimentacao[],
-      moveClose : [] as Movimentacao[],
-      resultOpen: 0,
-      resultClosed: 0,
+      moveClose: [] as Movimentacao[],
     };
+  },
+  computed: {
+    dayGain() : number{
+      return this.moveClose.reduce((acc, movimentacao) => {
+          return acc + movimentacao.valorTotal;
+      }, 0);
+    },
   },
   mounted() {
     const options = { weekday: 'long', day: 'numeric', month: 'long' };
     this.formattedDate = new Date().toLocaleString('en-US', options as Intl.DateTimeFormatOptions);
     this.fetchMovimentacoes();
     this.fetchMovimentacoesOpen();
-  this.fetchMovimentacoesClose();
+    this.fetchMovimentacoesClose();
   },
   methods: {
     async fetchMovimentacoes() {
@@ -138,12 +143,12 @@ export default defineComponent({
 
     getActionRoute(movimentacao: Movimentacao) {
       if (movimentacao.saida) {
-        return {path:'/access-closemovement',query:{licensePlate:movimentacao.veiculo.placa}}
+        return { path: '/access-closemovement', query: { licensePlate: movimentacao.veiculo.placa } }
       } else {
-        return{
+        return {
           path: '/access-movement',
           query: { licensePlate: movimentacao.veiculo.placa }
-        } 
+        }
       }
     }
 
