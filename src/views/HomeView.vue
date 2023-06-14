@@ -28,8 +28,25 @@
               <th scope="col">Status</th>
               <th scope="col">Entry Date</th>
               <th scope="col">Departure Date</th>
+              <th scope="col">Action</th>
             </tr>
           </thead>
+          <tbody>
+            <tr v-for="movimentacao in movimentacoes" :key="movimentacao.id">
+              <td>{{ movimentacao.condutor.nome }}</td>
+              <td>{{ movimentacao.veiculo.placa }}</td>
+              <td :class="{ 'text-success': movimentacao.saida, 'text-danger': !movimentacao.saida }">
+                {{ movimentacao.saida ? 'Closed' : 'Pending' }}
+              </td>
+              <td>{{ movimentacao.entrada }}</td>
+              <td>{{ movimentacao.saida !== null ? movimentacao.saida : '-' }}</td>
+              <td>
+                <router-link :to="getActionRoute(movimentacao)">
+                  <i class="bi bi-eye"></i>
+                </router-link>
+              </td>
+            </tr>
+          </tbody>
         </table>
       </div>
     </div>
@@ -64,19 +81,48 @@
 </template>
 
 <script lang="ts">
+import { MovimentacaoClient } from '@/client/movimentacao.client';
+import { Movimentacao } from '@/model/movimentacao';
+import axios from 'axios';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'HomeView',
   data() {
     return {
-      formattedDate: ''
+      formattedDate: '',
+      movimentacoes: [] as Movimentacao[],
     };
   },
   mounted() {
     const options = { weekday: 'long', day: 'numeric', month: 'long' };
     this.formattedDate = new Date().toLocaleString('en-US', options as Intl.DateTimeFormatOptions);
-  }
+    this.fetchMovimentacoes();
+  },
+  methods: {
+    async fetchMovimentacoes() {
+      try {
+        const moveClient = new MovimentacaoClient();
+        const response = await moveClient.findLastFive();
+        this.movimentacoes = response;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    getActionRoute(movimentacao: Movimentacao) {
+      if (movimentacao.saida) {
+        return {path:'/access-closemovement',query:{licensePlate:movimentacao.veiculo.placa}}
+      } else {
+        return{
+          path: '/access-movement',
+          query: { licensePlate: movimentacao.veiculo.placa }
+        } 
+      }
+    }
+
+
+  },
 });
 </script>
 
