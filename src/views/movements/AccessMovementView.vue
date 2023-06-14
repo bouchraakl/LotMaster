@@ -157,9 +157,14 @@ export default defineComponent({
       selectedMonth: null as number | null,
       selectedMove: null as Movimentacao | null,
       currentPage: 0,
-      pageSize: 5,
+      pageSize: 10,
     };
   },
+  created() {
+    if(this.$route.query.licensePlate){
+      this.searchQuery = this.$route.query.licensePlate.toLocaleString();
+  }
+},
   computed: {
     openFilter(): Movimentacao[] {
       if (!this.searchQuery && !this.selectedYear && !this.selectedMonth) {
@@ -210,7 +215,10 @@ export default defineComponent({
 
         const moveClient = new MovimentacaoClient();
         const pageResponse: PageResponse<Movimentacao> = await moveClient.findByFiltrosPaginado(pageRequest);
-        this.moves = pageResponse.content;
+          
+        this.moves = pageResponse.content.filter((move: Movimentacao) => {
+          return move.saida === null;
+        })
       } catch (error) {
         console.error(error);
       }
