@@ -9,13 +9,13 @@
         <p class="titlebox">Latest Movements</p>
         <div class="stats d-flex gap-3">
           <div class="done d-flex flex-column align-items-center">
-            <span>0</span>
-            <p>Closed</p>
+            <span>{{ moveClose.length }}</span>
+            <router-link to="/access-closemovement" class="text-reset text-decoration-done">Done</router-link>
           </div>
           <div class="hv"></div>
           <div class="pending d-flex flex-column align-items-center">
-            <span>0</span>
-            <p>Pending</p>
+            <span>{{ moveOpen.length }}</span>
+            <router-link to="/access-movement" class="text-reset text-decoration-done">Pending</router-link>
           </div>
         </div>
       </div>
@@ -92,12 +92,18 @@ export default defineComponent({
     return {
       formattedDate: '',
       movimentacoes: [] as Movimentacao[],
+      moveOpen: [] as Movimentacao[],
+      moveClose : [] as Movimentacao[],
+      resultOpen: 0,
+      resultClosed: 0,
     };
   },
   mounted() {
     const options = { weekday: 'long', day: 'numeric', month: 'long' };
     this.formattedDate = new Date().toLocaleString('en-US', options as Intl.DateTimeFormatOptions);
     this.fetchMovimentacoes();
+    this.fetchMovimentacoesOpen();
+  this.fetchMovimentacoesClose();
   },
   methods: {
     async fetchMovimentacoes() {
@@ -105,6 +111,26 @@ export default defineComponent({
         const moveClient = new MovimentacaoClient();
         const response = await moveClient.findLastFive();
         this.movimentacoes = response;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async fetchMovimentacoesOpen() {
+      try {
+        const moveClient = new MovimentacaoClient();
+        const response = await moveClient.findAllByOpen();
+        this.moveOpen = response;
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
+    async fetchMovimentacoesClose() {
+      try {
+        const moveClient = new MovimentacaoClient();
+        const response = await moveClient.findAllByClose();
+        this.moveClose = response;
       } catch (error) {
         console.error(error);
       }
