@@ -172,14 +172,9 @@ export default defineComponent({
       selectedMonth: null as number | null,
       selectedMove: null as Movimentacao | null,
       currentPage: 0,
-      pageSize: 20,
+      pageSize: 5,
     };
   },
-  created() {
-    if(this.$route.query.licensePlate){
-      this.searchQuery = this.$route.query.licensePlate.toLocaleString();
-  }
-},
   computed: {
     closeFilter(): Movimentacao[] {
       if (!this.searchQuery && !this.selectedYear && !this.selectedMonth) {
@@ -222,21 +217,18 @@ export default defineComponent({
   },
   methods: {
     async fetchMoves() {
-    try {
-      const pageRequest = new PageRequest();
-      pageRequest.currentPage = this.currentPage;
-      pageRequest.pageSize = this.pageSize;
+      try {
+        const pageRequest = new PageRequest();
+        pageRequest.currentPage = this.currentPage;
+        pageRequest.pageSize = this.pageSize;
 
-      const moveClient = new MovimentacaoClient();
-      const pageResponse: PageResponse<Movimentacao> = await moveClient.findByFiltrosPaginado(pageRequest);
-
-      this.moves = pageResponse.content.filter((move: Movimentacao) => {
-        return move.saida !== null;
-      })
-    } catch (error) {
-      console.error(error);
-    }
-  },
+        const moveClient = new MovimentacaoClient();
+        const pageResponse: PageResponse<Movimentacao> = await moveClient.findByFiltrosPaginado(pageRequest);
+        this.moves = pageResponse.content;
+      } catch (error) {
+        console.error(error);
+      }
+    },
 
     previousPage() {
       if (this.currentPage > 0) {
