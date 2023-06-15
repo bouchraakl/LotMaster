@@ -6,6 +6,7 @@ import axios, { AxiosInstance } from "axios";
 
 export class MarcaClient {
 
+
     private axiosClient: AxiosInstance;
     
 
@@ -18,7 +19,17 @@ export class MarcaClient {
         });
     }
 
-  
+    public async findByNome(nome: string): Promise<Marca> {
+        try {
+          const response = await axios.get<Marca>(`http://localhost:8081/api/marca/nome?nome=${nome}`)
+      
+          return response.data;
+
+        } catch (error) {
+          return Promise.reject(error);
+        }
+      }
+
 
     public async findById(id:number): Promise<Marca> {
 
