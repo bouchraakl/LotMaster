@@ -1,15 +1,31 @@
 <template>
-  <div class="access-content d-flex flex-column align-items-start justify-content-start">
+  <div
+    class="access-content d-flex flex-column align-items-start justify-content-start"
+  >
     <p class="title-pages">Register : Open Movement</p>
     <div class="form-application d-flex flex-column custom-section">
-      <form class="form-app d-flex flex-column align-items-start mt-4 h-100 gap-3" @submit.prevent="">
+      <form
+        class="form-app d-flex flex-column align-items-start mt-4 h-100 gap-3"
+        @submit.prevent="submitForm"
+      >
         <div class="d-flex align-items-center align-self-start gap-3">
-          <div class=" d-flex flex-column">
-            <label for="exampleDataList" class="form-label">Associated Condutor</label>
-            <input class="form-control" list="datalistOptions" id="exampleDataList"
-              placeholder="Search By Name ..." style="width: 300px;">
-            <datalist id="datalistOptions">
-              <option value="San Francisco"></option>
+          <div class="d-flex flex-column">
+            <label for="exampleDataList" class="form-label"
+              >Associated Condutor</label
+            >
+            <input
+              class="form-control"
+              list="datalistOptionsCondutor"
+              id="exampleDataList"
+              placeholder="Search By CPF ..."
+              style="width: 300px"
+              v-model="move.condutor.cpf"
+            />
+            <datalist id="datalistOptionsCondutor">
+              <option
+                v-for="option in datalistOptionsCondutor"
+                :value="option"
+              ></option>
             </datalist>
           </div>
           <router-link to="/register-conductor" class="align-self-end">
@@ -17,12 +33,24 @@
           </router-link>
         </div>
         <div class="d-flex align-items-center align-self-start gap-3">
-          <div class=" d-flex flex-column">
-            <label for="exampleDataList" class="form-label">Associated Vehicle</label>
-            <input class="form-control" list="datalistOptions" id="exampleDataList"
-              placeholder="Search By lisence plate ..." style="width: 300px;">
-            <datalist id="datalistOptions">
-              <option value="San Francisco"></option>
+          <div class="d-flex flex-column">
+            <label for="exampleDataList" class="form-label"
+              >Associated Vehicle</label
+            >
+            <input
+              class="form-control"
+              list="datalistOptionsVeiculo"
+              id="exampleDataList"
+              placeholder="Search By lisence plate ..."
+              style="width: 300px"
+              v-model="move.veiculo.placa"
+              
+            />
+            <datalist id="datalistOptionsVeiculo">
+              <option
+                v-for="option in datalistOptionsVeiculo"
+                :value="option"
+              ></option>
             </datalist>
           </div>
           <router-link to="/register-vehicle" class="align-self-end">
@@ -30,9 +58,15 @@
           </router-link>
         </div>
         <div class="d-flex align-items-center align-self-start gap-3">
-          <div class=" d-flex flex-column">
+          <div class="d-flex flex-column">
             <label for="entry" class="form-label">Entry Date</label>
-            <input class="form-control" type="date" id="entry" style="width: 300px;">
+            <input
+              class="form-control"
+              type="datetime-local"
+              id="entry"
+              style="width: 300px"
+              v-model="move.entrada"
+            />
           </div>
         </div>
         <button class="mt-3">Open Movement</button>
@@ -40,18 +74,92 @@
     </div>
   </div>
 </template>
-  
+
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { MovimentacaoClient } from "@/client/movimentacao.client";
+import { CondutorClient } from "@/client/condutor.client";
+import { VeiculoClient } from "@/client/veiculo.client";
+import { Condutor } from "@/model/condutor";
+import { Movimentacao } from "@/model/movimentacao";
+import { defineComponent } from "vue";
+import { Veiculo } from "@/model/veiculo";
 
 export default defineComponent({
   data() {
     return {
-      datalistId: "suggestions",
+      move: new Movimentacao(),
+      datalistOptionsCondutor: [] as string[],
+      datalistOptionsVeiculo: [] as string[],
+      moves: [] as Movimentacao[],
     };
   },
-})
+  computed: {
+    moveClient() {
+      return new MovimentacaoClient();
+    },
+  },
+  async mounted() {
+      try {
+      const veiculoClient = new VeiculoClient();
+      const condutorClient = new CondutorClient();
+      const modelData = await veiculoClient.findAll();
+      const modelData2 = await condutorClient.findAll();
+      this.datalistOptionsVeiculo = modelData.map((car) => car.placa);
+      this.datalistOptionsCondutor = modelData2.map((condutor) => condutor.cpf);
+      console.log(this.datalistOptionsCondutor);
+      console.log(this.datalistOptionsVeiculo);
+    } catch (error) {
+      console.error("Failed to fetch veiculo data:", this.datalistOptionsVeiculo);
+      console.error("Failed to fetch condutor data:", this.datalistOptionsCondutor);
+    }
+  },
+  methods: {
+    async submitForm() {
+      try {
+        await this.fetchCondutorId();
+        await this.fetchVeiculoId();
+        const response = await this.moveClient.save(this.move);
+        const data = response;
+        console.log(data);
+      } catch (error) {
+        console.log("Erro ao salvar movimentacao", this.move);
+        console.log(error);
+      }
+    },
 
+    async fetchCondutorId() {
+      try {
+        const condutorClient = new CondutorClient();
+        const moveData = await condutorClient.getByCPF(
+          this.move.condutor.cpf
+        );
+        if (moveData && moveData.id) {
+          this.move.condutor.id = moveData.id;
+        } else {
+          console.error("Condutor not found");
+        }
+      } catch (error) {
+        console.error("Failed to fetch condutor ID:", error);
+      }
+    },
+
+    async fetchVeiculoId() {
+      try {
+        const veiculoClient = new VeiculoClient();
+        const moveData = await veiculoClient.findByPlaca(
+          this.move.veiculo.placa
+        );
+        if (moveData && moveData.id) {
+          this.move.veiculo.id = moveData.id;
+        } else {
+          console.error("Veiculo not found");
+        }
+      } catch (error) {
+        console.error("Failed to fetch veiculo ID:", error);
+      }
+    },
+  },
+});
 </script>
 
 <style>
@@ -60,11 +168,11 @@ export default defineComponent({
   height: 37px;
   border-radius: 5px;
   border: none;
-  font-family: 'Raleway';
+  font-family: "Raleway";
   font-weight: 500;
   font-size: 15px;
-  background: #B5C2C9;
-  color: #F3F3F3;
+  background: #b5c2c9;
+  color: #f3f3f3;
   margin: 0;
 }
 
@@ -74,7 +182,5 @@ label {
   font-weight: 400;
   line-height: 20px;
   text-align: left;
-
 }
 </style>
-  

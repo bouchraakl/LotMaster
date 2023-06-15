@@ -139,7 +139,6 @@
 
 <script lang="ts">
 import { computed, defineComponent } from "vue";
-import axios from "axios";
 import { Movimentacao } from "@/model/movimentacao";
 import { MovimentacaoClient } from "@/client/movimentacao.client";
 import { VeiculoClient } from "@/client/veiculo.client";
@@ -157,7 +156,7 @@ export default defineComponent({
       selectedMonth: null as number | null,
       selectedMove: null as Movimentacao | null,
       currentPage: 0,
-      pageSize: 10,
+      pageSize: 100,
     };
   },
   created() {
