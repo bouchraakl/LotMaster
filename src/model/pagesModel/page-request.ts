@@ -5,7 +5,6 @@ export class PageRequest {
 
     constructor() {
       this.currentPage = 0
-      this.pageSize = 2
       this.direction = 'asc'
     }
 

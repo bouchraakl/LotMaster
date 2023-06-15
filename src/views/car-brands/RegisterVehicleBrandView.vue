@@ -39,6 +39,7 @@
             console.log(data);
           } catch (error) {
             console.log('Erro ao salvar marca', this.brand);
+            console.error(error);
           }
         },
       },

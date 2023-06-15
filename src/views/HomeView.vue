@@ -97,9 +97,9 @@ export default defineComponent({
     };
   },
   computed: {
-    dayGain() : number{
+    dayGain(): number {
       return this.moveClose.reduce((acc, movimentacao) => {
-          return acc + movimentacao.valorTotal;
+        return acc + movimentacao.valorTotal;
       }, 0);
     },
   },
