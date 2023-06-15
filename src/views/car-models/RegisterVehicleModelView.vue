@@ -32,6 +32,7 @@ import { ModeloClient } from '@/client/modelo.client';
 import { Modelo } from '@/model/modelo';
 import { PageRequest } from '@/model/pagesModel/page-request';
 import { defineComponent } from 'vue';
+import  Vue from 'vue';
 
 export default defineComponent({
   data() {
@@ -42,20 +43,16 @@ export default defineComponent({
   };
 },
 
-
-  async mounted() {
-    try {
-      const pageRequest = new PageRequest();
-      const modeloClient = new ModeloClient();
-      const modelData = await modeloClient.findByFiltrosPaginado(pageRequest);
-      this.datalistOptions = modelData.content
-  .map((model: { marca: { nome: string; }; }) => model.marca.nome);
-
-    } catch (error) {
-      console.error('Failed to fetch model data:', this.datalistOptions);
-    }
-  },
-
+async mounted() {
+  try {
+    const marcaClient = new MarcaClient();
+    const modelData = await marcaClient.findAll();
+    this.datalistOptions = modelData.map((marca) => marca.nome);
+    console.log(this.datalistOptions);
+  } catch (error) {
+    console.error('Failed to fetch model data:', this.datalistOptions);
+  }
+},
   computed: {
     modelClient() {
       return new ModeloClient();
