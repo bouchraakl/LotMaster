@@ -28,6 +28,28 @@ export class CondutorClient {
         }
     }
 
+    public async findByNome(nome: string): Promise<Condutor> {
+        try {
+          const response = await axios.get<Condutor>(`http://localhost:8081/api/condutor/nome?nome=${nome}`)
+      
+          return response.data;
+
+        } catch (error) {
+          return Promise.reject(error);
+        }
+      }
+
+      public async getByCPF(cpf: string): Promise<Condutor> {
+        try {
+          const response = await axios.get<Condutor>(`http://localhost:8081/api/condutor/cpf?cpf=${cpf}`)
+      
+          return response.data;
+
+        } catch (error) {
+          return Promise.reject(error);
+        }
+      }
+
 
     public async findAll(): Promise<Condutor[]> {
         try {

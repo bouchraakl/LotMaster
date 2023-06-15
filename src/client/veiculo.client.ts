@@ -28,6 +28,17 @@ export class VeiculoClient {
         }
     }
 
+    public async findByPlaca(placa: string): Promise<Veiculo> {
+        try {
+          const response = await axios.get<Veiculo>(`http://localhost:8081/api/veiculo/placa?placa=${placa}`)
+      
+          return response.data;
+
+        } catch (error) {
+          return Promise.reject(error);
+        }
+      }
+
 
     public async findAll(): Promise<Veiculo[]> {
         try {
