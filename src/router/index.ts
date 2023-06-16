@@ -108,10 +108,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/movements/EditMovementView.vue')
   },
   {
-    path: '/register-closemovement',
+    path: '/register-closemovement/:movemId', 
     name: 'register-closemovement',
     component: () => import('../views/movements/RegisterCloseMovementView.vue')
   },
+  
   {
     path: '/access-closemovement',
     name: 'access-closemovement',

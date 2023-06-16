@@ -266,15 +266,15 @@ export default defineComponent({
 
     },
 
-    async closeItem(move: Movimentacao) {
-      const confirmation = confirm("Are you sure you want to close this movement?");
-      if (!confirmation) {
-        return;
-      }
 
-      const moves = move.id;
-      this.$router.push({ name: "register-closemovement", params: { moves } });
-    },
+async closeItem(move: Movimentacao) {
+  try {
+    const moveId = move.id;
+    await this.$router.push({ name: "register-closemovement", params: { movemId: moveId } });
+  } catch (error) {
+    console.error(error);
+  }
+},
 
     async viewItem(move: Movimentacao) {
       this.selectedMove = move; // Set the selected move for the modal

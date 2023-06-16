@@ -172,7 +172,7 @@ export default defineComponent({
       selectedMonth: null as number | null,
       selectedMove: null as Movimentacao | null,
       currentPage: 0,
-      pageSize: 20,
+      pageSize: 100,
     };
   },
   created() {
