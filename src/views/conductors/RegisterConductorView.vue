@@ -39,10 +39,20 @@
             />
           </div>
         </div>
-        <div v-if="errorMessage" class="error-message">
-          {{ errorMessage }}
+        <!-- Error Message -->
+        <div class="mt-3 d-flex align-items-center gap-3">
+          <button type="submit">Register Vehicle Model</button>
+          <p
+            :class="[
+              'error-message',
+              errorMessage.status === 'success'
+                ? 'text-success'
+                : 'text-danger',
+            ]"
+          >
+            {{ errorMessage.message }}
+          </p>
         </div>
-        <button class="mt-4" type="submit">Register Conductor</button>
       </form>
     </div>
   </div>
@@ -58,7 +68,10 @@ export default defineComponent({
   data() {
     return {
       condutor: new Condutor(),
-      errorMessage: '',
+      errorMessage: {
+        status: "", // Possible values: "success", "error"
+        message: "",
+      },
     };
   },
   computed: {
@@ -71,9 +84,17 @@ export default defineComponent({
       try {
         const response = await this.condutorClient.save(this.condutor);
         const data = response;
-        console.log(data);
-      } catch (error) {
-        console.error(error);
+        // Set success message
+        this.errorMessage.status = "success";
+        this.errorMessage.message = "Conductor registered successfully";
+      } catch (error: any) {
+        this.errorMessage.status = "error";
+        if (error.response && error.response.data) {
+          const errorMessages = Object.values(error.response.data);
+          this.errorMessage.message = errorMessages.join(", ");
+        } else {
+          this.errorMessage.message = "An error occurred during registration.";
+        }
       }
     },
   },
