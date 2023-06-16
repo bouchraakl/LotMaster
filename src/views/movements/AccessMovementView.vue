@@ -269,8 +269,10 @@ export default defineComponent({
 
 async closeItem(move: Movimentacao) {
   try {
+    const moveClient = new MovimentacaoClient();
     const moveId = move.id;
     await this.$router.push({ name: "register-closemovement", params: { movemId: moveId } });
+    await moveClient.delete(moveId);
   } catch (error) {
     console.error(error);
   }

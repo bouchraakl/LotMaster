@@ -2,7 +2,7 @@
   <div
     class="access-content d-flex flex-column align-items-start justify-content-start"
   >
-    <p class="title-pages">Register : Open Movement</p>
+    <p class="title-pages">Register : Close Movement</p>
     <div class="form-application d-flex flex-column custom-section">
       <form
         class="form-app d-flex flex-column align-items-start mt-4 h-100 gap-3"
@@ -61,7 +61,20 @@
             />
           </div>
         </div>
-        <button class="mt-3" type="submit">Close Movement</button>
+        <!-- Error Message -->
+        <div class="mt-3 d-flex align-items-center gap-3">
+          <button type="submit">Close Movement</button>
+          <p
+            :class="[
+              'error-message',
+              errorMessage.status === 'success'
+                ? 'text-success'
+                : 'text-danger',
+            ]"
+          >
+            {{ errorMessage.message }}
+          </p>
+        </div>
       </form>
     </div>
   </div>
@@ -81,6 +94,10 @@ export default defineComponent({
       veiculoAs: "",
       entryAs: "",
       move: new Movimentacao(),
+      errorMessage: {
+        status: "", // Possible values: "success", "error"
+        message: "",
+      },
     };
   },
   computed: {
@@ -93,25 +110,28 @@ export default defineComponent({
   },
   methods: {
     async submitForm() {
-  try {
+      try {
+        // Fetch the veiculo and condutor data
+        await this.fetchItems();
 
-    // Fetch the veiculo and condutor data
-    await this.fetchItems();
+        // Perform any additional form validation or data manipulation here
 
-    // Perform any additional form validation or data manipulation here
+        // Submit the form data
+        await this.moveClient.save(this.move);
 
-    // Submit the form data
-    await this.moveClient.save(this.move);
-
-    // Form submission successful, perform any necessary actions
-    console.log("yey")
-
-  } catch (error) {
-    console.log("Error submitting form:", error);
-    // Handle any errors that occur during form submission
-  }
-},
-
+        // Set success message
+        this.errorMessage.status = "success";
+        this.errorMessage.message = "Movement closed successfully";
+      } catch (error: any) {
+        this.errorMessage.status = "error";
+        if (error.response && error.response.data) {
+          const errorMessages = Object.values(error.response.data);
+          this.errorMessage.message = errorMessages.join(", ");
+        } else {
+          this.errorMessage.message = "An error occurred during registration.";
+        }
+      }
+    },
 
     async fetchOpenMovement() {
       try {
@@ -121,12 +141,12 @@ export default defineComponent({
         this.condutorAs = response.condutor.cpf;
         this.veiculoAs = response.veiculo.placa;
         this.entryAs = response.entrada.toString();
-        console.log(this.entryAs)
+        console.log(this.entryAs);
       } catch (error) {
         console.log(error);
       }
     },
-    async fetchItems(){
+    async fetchItems() {
       try {
         const veiculoClient = new VeiculoClient();
         const condutorClient = new CondutorClient();
@@ -134,15 +154,15 @@ export default defineComponent({
         const condutorData = await condutorClient.getByCPF(this.condutorAs);
         if (veiculoData && veiculoData.id) {
           this.move.veiculo.id = veiculoData.id;
-        } 
+        }
         if (condutorData && condutorData.id) {
           this.move.condutor.id = condutorData.id;
-        } 
+        }
         this.move.entrada = new Date(this.entryAs);
       } catch (error) {
         console.error("Failed to fetch veiculo ID:", error);
       }
-    }
+    },
   },
 });
 </script>

@@ -1,9 +1,8 @@
 export enum Cor{
-    BRANCO = "BRANCO",
-    PRETO = "PRETO",
-    PRATA = "PRATA",
-    AZUL = "AZUL",
-    CINZA = "CINZA",
-    ROSA = "ROSA",
-
+    WHITE = "WHITE",
+    BLACK = "BLACK",
+    SILVER = "SILVER",
+    BLUE = "BLUE",
+    GRAY = "GRAY",
+    PINK = "PINK",
 }
