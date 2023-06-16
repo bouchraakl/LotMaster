@@ -19,7 +19,20 @@
             />
           </div>
         </div>
-        <button class="mt-3" type="submit">Register Brand Name</button>
+                <!-- Error Message -->
+                <div class="mt-3 d-flex align-items-center gap-3">
+          <button type="submit">Register Vehicle Brand</button>
+          <p
+            :class="[
+              'error-message',
+              errorMessage.status === 'success'
+                ? 'text-success'
+                : 'text-danger',
+            ]"
+          >
+            {{ errorMessage.message }}
+          </p>
+        </div>
       </form>
     </div>
   </div>
@@ -34,6 +47,10 @@ export default defineComponent({
   data() {
     return {
       brand: new Marca(),
+      errorMessage: {
+        status: "", // Possible values: "success", "error"
+        message: "",
+      },
     };
   },
   computed: {
@@ -46,10 +63,17 @@ export default defineComponent({
       try {
         const response = await this.brandClient.save(this.brand);
         const data = response;
-        console.log(data);
-      } catch (error) {
-        console.log("Erro ao salvar marca", this.brand);
-        console.error(error);
+        // Set success message
+        this.errorMessage.status = "success";
+        this.errorMessage.message = "Vehicle Brand registered successfully";
+      } catch (error: any) {
+        this.errorMessage.status = "error";
+        if (error.response && error.response.data) {
+          const errorMessages = Object.values(error.response.data);
+          this.errorMessage.message = errorMessages.join(", ");
+        } else {
+          this.errorMessage.message = "An error occurred during registration.";
+        }
       }
     },
   },
