@@ -14,7 +14,7 @@
           <option value="">All</option>
           <option v-for="year in selectableYears" :value="year">{{ year }}</option>
         </select>
-      </div>
+      </div> 
 
       <div class="filter-container d-flex align-items-center gap-2">
         <label for="month-filter">Month:</label>
@@ -173,9 +173,13 @@ export default defineComponent({
     },
 
     async editItem(model: Modelo) {
-
-      const brandId = model.id;
-      this.$router.push({ name: "edit-vehicleModel", params: { brandId } });
+      try {
+        const modelClient = new ModeloClient();
+        const editModelIds = model.id;
+        await this.$router.push({ name: "edit-vehicleModel", params: { editModelId: editModelIds } });
+      } catch (error) {
+        console.error(error);
+      }
 
     },
 
