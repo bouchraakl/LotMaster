@@ -38,7 +38,20 @@
             />
           </div>
         </div>
-        <button class="mt-3" type="submit">Register Vehicle Model</button>
+                        <!-- Error Message -->
+                        <div class="mt-3 d-flex align-items-center gap-3">
+          <button type="submit">Register Vehicle Model</button>
+          <p
+            :class="[
+              'error-message',
+              errorMessage.status === 'success'
+                ? 'text-success'
+                : 'text-danger',
+            ]"
+          >
+            {{ errorMessage.message }}
+          </p>
+        </div>
       </form>
     </div>
   </div>
@@ -58,6 +71,10 @@ export default defineComponent({
       model: new Modelo(),
       models: [] as Modelo[],
       datalistOptions: [] as string[],
+      errorMessage: {
+        status: "", // Possible values: "success", "error"
+        message: "",
+      },
     };
   },
 
@@ -82,10 +99,17 @@ export default defineComponent({
         await this.fetchBrandId();
         const response = await this.modelClient.save(this.model);
         const data = response;
-        console.log(data);
-      } catch (error) {
-        console.log("Erro ao salvar modelo", this.model);
-        console.log(error);
+         // Set success message
+         this.errorMessage.status = "success";
+        this.errorMessage.message = "Vehicle Model registered successfully";
+      }  catch (error: any) {
+        this.errorMessage.status = "error";
+        if (error.response && error.response.data) {
+          const errorMessages = Object.values(error.response.data);
+          this.errorMessage.message = errorMessages.join(", ");
+        } else {
+          this.errorMessage.message = "An error occurred during registration.";
+        }
       }
     },
     async fetchBrandId() {
