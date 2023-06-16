@@ -60,12 +60,12 @@ export class ModeloClient {
 
     public async update(modelo: Modelo): Promise<Modelo> {
         try {
-            const response = await this.axiosClient.put<Modelo>(`${modelo.id}`, modelo);
-            return response.data;
-        }catch (error) {
-            return Promise.reject(error);
+          const response = await this.axiosClient.put<Modelo>('http://localhost:8081/api/modelo', modelo);
+          return response.data;
+        } catch (error) {
+          return Promise.reject(error);
         }
-    }
+      }   
 
     public async delete(id: number): Promise<void> {
         try {
