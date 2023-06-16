@@ -44,7 +44,6 @@
               placeholder="Search By lisence plate ..."
               style="width: 300px"
               v-model="move.veiculo.placa"
-              
             />
             <datalist id="datalistOptionsVeiculo">
               <option
@@ -69,7 +68,20 @@
             />
           </div>
         </div>
-        <button class="mt-3">Open Movement</button>
+        <!-- Error Message -->
+        <div class="mt-3 d-flex align-items-center gap-3">
+          <button type="submit">Open Movimentation</button>
+          <p
+            :class="[
+              'error-message',
+              errorMessage.status === 'success'
+                ? 'text-success'
+                : 'text-danger',
+            ]"
+          >
+            {{ errorMessage.message }}
+          </p>
+        </div>
       </form>
     </div>
   </div>
@@ -91,6 +103,10 @@ export default defineComponent({
       datalistOptionsCondutor: [] as string[],
       datalistOptionsVeiculo: [] as string[],
       moves: [] as Movimentacao[],
+      errorMessage: {
+        status: "", // Possible values: "success", "error"
+        message: "",
+      },
     };
   },
   computed: {
@@ -99,7 +115,7 @@ export default defineComponent({
     },
   },
   async mounted() {
-      try {
+    try {
       const veiculoClient = new VeiculoClient();
       const condutorClient = new CondutorClient();
       const modelData = await veiculoClient.findAll();
@@ -109,8 +125,14 @@ export default defineComponent({
       console.log(this.datalistOptionsCondutor);
       console.log(this.datalistOptionsVeiculo);
     } catch (error) {
-      console.error("Failed to fetch veiculo data:", this.datalistOptionsVeiculo);
-      console.error("Failed to fetch condutor data:", this.datalistOptionsCondutor);
+      console.error(
+        "Failed to fetch veiculo data:",
+        this.datalistOptionsVeiculo
+      );
+      console.error(
+        "Failed to fetch condutor data:",
+        this.datalistOptionsCondutor
+      );
     }
   },
   methods: {
@@ -120,19 +142,24 @@ export default defineComponent({
         await this.fetchVeiculoId();
         const response = await this.moveClient.save(this.move);
         const data = response;
-        console.log(data);
-      } catch (error) {
-        console.log("Erro ao salvar movimentacao", this.move);
-        console.log(error);
+        // Set success message
+        this.errorMessage.status = "success";
+        this.errorMessage.message = "Movement Opened registered successfully";
+      } catch (error: any) {
+        this.errorMessage.status = "error";
+        if (error.response && error.response.data) {
+          const errorMessages = Object.values(error.response.data);
+          this.errorMessage.message = errorMessages.join(", ");
+        } else {
+          this.errorMessage.message = "An error occurred during registration.";
+        }
       }
     },
 
     async fetchCondutorId() {
       try {
         const condutorClient = new CondutorClient();
-        const moveData = await condutorClient.getByCPF(
-          this.move.condutor.cpf
-        );
+        const moveData = await condutorClient.getByCPF(this.move.condutor.cpf);
         if (moveData && moveData.id) {
           this.move.condutor.id = moveData.id;
         } else {
