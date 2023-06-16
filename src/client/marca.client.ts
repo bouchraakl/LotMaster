@@ -63,12 +63,12 @@ export class MarcaClient {
 
     public async update(marca: Marca): Promise<Marca> {
         try {
-            const response = await this.axiosClient.put<Marca>(`${marca.id}`, marca);
-            return response.data;
-        }catch (error) {
-            return Promise.reject(error);
+          const response = await this.axiosClient.put<Marca>('http://localhost:8081/api/marca', marca);
+          return response.data;
+        } catch (error) {
+          return Promise.reject(error);
         }
-    }
+      }      
 
     public async delete(id: number): Promise<void> {
         try {
