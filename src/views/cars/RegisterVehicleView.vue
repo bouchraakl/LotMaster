@@ -2,12 +2,13 @@
   <div
     class="access-content d-flex flex-column align-items-start justify-content-start"
   >
-    <p class="title-pages">Register : Vehicle</p>
+    <p class="title-pages">Register: Vehicle</p>
     <div class="form-application d-flex flex-column custom-section">
       <form
         class="form-app d-flex flex-column align-items-start mt-4 h-100 gap-3"
         @submit.prevent="submitForm"
       >
+        <!-- Vehicle License Plate -->
         <div class="d-flex align-items-center align-self-start gap-3">
           <div class="d-flex flex-column">
             <label for="plate" class="form-label">Vehicle License Plate</label>
@@ -19,6 +20,7 @@
             />
           </div>
         </div>
+        <!-- Associated Model -->
         <div class="d-flex align-items-center align-self-start gap-3">
           <div class="d-flex flex-column">
             <label for="models" class="form-label">Associated Model</label>
@@ -41,6 +43,7 @@
             <button class="moveBtn m-0">Or Register New Model</button>
           </router-link>
         </div>
+        <!-- Vehicle Year, Color, and Type -->
         <div class="d-flex align-items-center align-self-start gap-3">
           <div class="d-flex flex-column">
             <label for="year" class="form-label">Vehicle Year</label>
@@ -79,7 +82,20 @@
             </select>
           </div>
         </div>
-        <button class="mt-4" type="submit">Register Vehicle</button>
+        <!-- Error Message -->
+        <div class="mt-4 d-flex align-items-center gap-3">
+          <button type="submit">Register Vehicle</button>
+          <p
+            :class="[
+              'error-message',
+              errorMessage.status === 'success'
+                ? 'text-success'
+                : 'text-danger',
+            ]"
+          >
+            {{ errorMessage.message }}
+          </p>
+        </div>
       </form>
     </div>
   </div>
@@ -91,6 +107,7 @@ import { VeiculoClient } from "@/client/veiculo.client";
 import { Cor } from "@/model/cor";
 import { Tipo } from "@/model/tipo";
 import { Veiculo } from "@/model/veiculo";
+import { AxiosError } from "axios";
 import { defineComponent } from "vue";
 
 export default defineComponent({
@@ -101,6 +118,10 @@ export default defineComponent({
       datalistOptions: [] as string[],
       types: Object.values(Tipo),
       colors: Object.values(Cor),
+      errorMessage: {
+        status: "", // Possible values: "success", "error"
+        message: "",
+      },
     };
   },
   async mounted() {
@@ -124,12 +145,21 @@ export default defineComponent({
         await this.fetchModelsId();
         const response = await this.vehicleClient.save(this.vehicle);
         const data = response;
-        console.log(data);
-      } catch (error) {
-        console.log("Erro ao salvar veiculo", this.vehicle);
-        console.log(error);
+
+        // Set success message
+        this.errorMessage.status = "success";
+        this.errorMessage.message = "Vehicle registered successfully";
+      } catch (error: any) {
+        this.errorMessage.status = "error";
+        if (error.response && error.response.data) {
+          const errorMessages = Object.values(error.response.data);
+          this.errorMessage.message = errorMessages.join(", ");
+        } else {
+          this.errorMessage.message = "An error occurred during registration.";
+        }
       }
     },
+
     async fetchModelsId() {
       try {
         const modelClient = new ModeloClient();
