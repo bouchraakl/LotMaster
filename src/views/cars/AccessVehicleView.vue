@@ -233,9 +233,9 @@ export default defineComponent({
     },
 
     async editItem(car: Veiculo) {
-
-      const brandId = car.id;
-      this.$router.push({ name: "/access-vehicle", params: { brandId } });
+      const carClient = new VeiculoClient();
+      const editVehicleIds = car.id;
+      await this.$router.push({ name: "edit-vehicle", params: { editVehicleId : editVehicleIds } });
 
     }
   },

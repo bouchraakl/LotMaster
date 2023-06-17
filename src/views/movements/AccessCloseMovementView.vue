@@ -178,7 +178,7 @@ export default defineComponent({
   created() {
     if(this.$route.query.licensePlate){
       this.searchQuery = this.$route.query.licensePlate.toLocaleString();
-  }
+  } 
 },
   computed: {
     closeFilter(): Movimentacao[] {
@@ -275,9 +275,13 @@ export default defineComponent({
     },
 
     async editItem(move: Movimentacao) {
-
-      const brandId = move.id;
-      this.$router.push({ name: "edit-closemovement", params: { brandId } });
+      try {
+        const moveClient = new MovimentacaoClient();
+        const editMoveIds = move.id;
+        await this.$router.push({ name: "edit-closemovement", params: { editCloseId: editMoveIds } });
+      } catch (error) {
+        console.error(error);
+      }
 
     },
 

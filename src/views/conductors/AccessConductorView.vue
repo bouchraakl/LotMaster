@@ -193,9 +193,9 @@ export default defineComponent({
     },
 
     async editItem(driver: Condutor) {
-
-      const brandId = driver.id;
-      this.$router.push({ name: "/edit-conductor", params: { brandId } });
+      const conductorClient = new CondutorClient();
+      const editCondutorIds = driver.id;
+      await this.$router.push({ name: "edit-conductor", params: { editConductorId : editCondutorIds } });
 
     }
   },

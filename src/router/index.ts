@@ -33,7 +33,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/car-brands/AccessVehicleBrandView.vue')
   },
   {
-    path: '/edit-vehicleBrand',
+    path: '/edit-vehicleBrand/:editBrandId',
     name: 'edit-vehicleBrand',
     component: () => import('../views/car-brands/EditVehicleBrandView.vue')
   },
@@ -48,7 +48,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/car-models/AccessVehicleModelView.vue')
   },
   {
-    path: '/edit-vehicleModel',
+    path: '/edit-vehicleModel/:editModelId',
     name: 'edit-vehicleModel',
     component: () => import('../views/car-models/EditVehicleModelView.vue')
   },
@@ -63,7 +63,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/cars/AccessVehicleView.vue')
   },
   {
-    path: '/edit-vehicle',
+    path: '/edit-vehicle/:editVehicleId',
     name: 'edit-vehicle',
     component: () => import('../views/cars/EditVehicleView.vue')
   },
@@ -78,7 +78,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/conductors/AccessConductorView.vue')
   },
   {
-    path: '/edit-conductor',
+    path: '/edit-conductor/:editConductorId',
     name: 'edit-conductor',
     component: () => import('../views/conductors/EditConductorView.vue')
   },
@@ -103,7 +103,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/movements/AccessMovementView.vue')
   },
   {
-    path: '/edit-movement',
+    path: '/edit-movement/:editMovemId',
     name: 'edit-movement',
     component: () => import('../views/movements/EditMovementView.vue')
   },
@@ -119,7 +119,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/movements/AccessCloseMovementView.vue')
   },
   {
-    path: '/edit-closemovement',
+    path: '/edit-closemovement/:editCloseId',
     name: 'edit-closemovement',
     component: () => import('../views/movements/EditCloseMovementView.vue')
   }

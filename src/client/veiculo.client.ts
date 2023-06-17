@@ -61,12 +61,12 @@ export class VeiculoClient {
 
     public async update(veiculo: Veiculo): Promise<Veiculo> {
         try {
-            const response = await this.axiosClient.put<Veiculo>(`${veiculo.id}`, veiculo);
-            return response.data;
-        }catch (error) {
-            return Promise.reject(error);
+          const response = await this.axiosClient.put<Veiculo>('http://localhost:8081/api/veiculo', veiculo);
+          return response.data;
+        } catch (error) {
+          return Promise.reject(error);
         }
-    }
+      }   
 
     public async delete(id: number): Promise<void> {
         try {

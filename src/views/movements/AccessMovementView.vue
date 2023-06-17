@@ -260,9 +260,13 @@ export default defineComponent({
     },
 
     async editItem(move: Movimentacao) {
-
-      const brandId = move.id;
-      this.$router.push({ name: "edit-movement", params: { brandId } });
+      try {
+        const moveClient = new MovimentacaoClient();
+        const editMoveIds = move.id;
+        await this.$router.push({ name: "edit-movement", params: { editMovemId: editMoveIds } });
+      } catch (error) {
+        console.error(error);
+      }
 
     },
 

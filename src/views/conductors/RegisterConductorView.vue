@@ -41,7 +41,7 @@
         </div>
         <!-- Error Message -->
         <div class="mt-3 d-flex align-items-center gap-3">
-          <button type="submit">Register Vehicle Model</button>
+          <button type="submit">Register Driver</button>
           <p
             :class="[
               'error-message',

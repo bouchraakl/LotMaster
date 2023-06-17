@@ -71,13 +71,13 @@ export class CondutorClient {
     }
 
     public async update(condutor: Condutor): Promise<Condutor> {
-        try {
-            const response = await this.axiosClient.put<Condutor>(`${condutor.id}`, condutor);
-            return response.data;
-        }catch (error) {
-            return Promise.reject(error);
-        }
-    }
+      try {
+        const response = await this.axiosClient.put<Condutor>('http://localhost:8081/api/condutor', condutor);
+        return response.data;
+      } catch (error) {
+        return Promise.reject(error);
+      }
+    }  
 
     public async delete(id: number): Promise<void> {
         try {

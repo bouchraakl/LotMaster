@@ -80,12 +80,12 @@ export class MovimentacaoClient {
 
     public async update(movimentacao: Movimentacao): Promise<Movimentacao> {
         try {
-            const response = await this.axiosClient.put<Movimentacao>(`${movimentacao.id}`, movimentacao);
-            return response.data;
+          const response = await this.axiosClient.put<Movimentacao>('http://localhost:8081/api/movimentacao', movimentacao);
+          return response.data;
         } catch (error) {
-            return Promise.reject(error);
+          return Promise.reject(error);
         }
-    }
+      }  
 
     public async delete(id: number): Promise<void> {
         try {
