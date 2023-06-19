@@ -22,13 +22,9 @@
                 </div>
                 <!-- Error Message -->
                 <div class="mt-3 d-flex align-items-center gap-3">
-                    <button type="submit">Register Vehicle Model</button>
-                    <p :class="[
-                        'error-message',
-                        errorMessage.status === 'success'
-                            ? 'text-success'
-                            : 'text-danger',
-                    ]">
+                    <button type="submit">Update Vehicle Model</button>
+                    <button type="button" @click="cancelEdit">Cancel</button>
+                    <p :class="['error-message', errorMessage.status === 'success' ? 'text-success' : 'text-danger']">
                         {{ errorMessage.message }}
                     </p>
                 </div>
@@ -149,6 +145,9 @@ export default defineComponent({
             } else {
                 console.log("Invalid editModelId parameter");
             }
+        },
+        cancelEdit() {
+            this.$router.push("/access-vehicleModel");
         },
     },
 });

@@ -61,17 +61,10 @@
               />
             </div>
           </div>
-          <!-- Error Message -->
           <div class="mt-3 d-flex align-items-center gap-3">
-            <button type="submit">Close Movement</button>
-            <p
-              :class="[
-                'error-message',
-                errorMessage.status === 'success'
-                  ? 'text-success'
-                  : 'text-danger',
-              ]"
-            >
+            <button type="submit">Update Movement</button>
+            <button type="button" @click="cancelEdit">Cancel</button>
+            <p :class="['error-message', errorMessage.status === 'success' ? 'text-success' : 'text-danger']">
               {{ errorMessage.message }}
             </p>
           </div>
@@ -215,6 +208,9 @@
                 console.log("Invalid editMovemId parameter");
             }
        
+      },
+      cancelEdit() {
+        this.$router.push("/access-closemovement");
       },
     },
   });

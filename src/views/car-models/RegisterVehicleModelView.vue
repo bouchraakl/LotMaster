@@ -26,6 +26,9 @@
               ></option>
             </datalist>
           </div>
+          <router-link to="/register-vehicleBrand" class="align-self-end">
+            <button class="moveBtn m-0">Or Register New Brand</button>
+          </router-link>
         </div>
         <div class="d-flex align-items-center align-self-start gap-3">
           <div class="d-flex flex-column">
@@ -106,7 +109,7 @@ export default defineComponent({
         this.errorMessage.status = "error";
         if (error.response && error.response.data) {
           const errorMessages = Object.values(error.response.data);
-          this.errorMessage.message = errorMessages.join(", ");
+          this.errorMessage.message = errorMessages.join("");
         } else {
           this.errorMessage.message = "An error occurred during registration.";
         }

@@ -42,14 +42,8 @@
           <!-- Error Message -->
           <div class="mt-3 d-flex align-items-center gap-3">
             <button type="submit">Update Driver</button>
-            <p
-              :class="[
-                'error-message',
-                errorMessage.status === 'success'
-                  ? 'text-success'
-                  : 'text-danger',
-              ]"
-            >
+            <button type="button" @click="cancelEdit">Cancel</button>
+            <p :class="['error-message', errorMessage.status === 'success' ? 'text-success' : 'text-danger']">
               {{ errorMessage.message }}
             </p>
           </div>
@@ -143,7 +137,10 @@
         } else {
           console.log("Invalid editdDriverId parameter");
         }
-      }
+      },
+      cancelEdit() {
+        this.$router.push("/access-conductor");
+      },
     },
   });
   </script>

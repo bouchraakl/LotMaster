@@ -80,16 +80,10 @@
             </div>
           </div>
           <!-- Error Message -->
-          <div class="mt-4 d-flex align-items-center gap-3">
-            <button type="submit">Register Vehicle</button>
-            <p
-              :class="[
-                'error-message',
-                errorMessage.status === 'success'
-                  ? 'text-success'
-                  : 'text-danger',
-              ]"
-            >
+          <div class="mt-3 d-flex align-items-center gap-3">
+            <button type="submit">Update Vehicle</button>
+            <button type="button" @click="cancelEdit">Cancel</button>
+            <p :class="['error-message', errorMessage.status === 'success' ? 'text-success' : 'text-danger']">
               {{ errorMessage.message }}
             </p>
           </div>
@@ -237,6 +231,9 @@
                 console.log("Invalid editVehicleId parameter");
             }
         },
+        cancelEdit() {
+        this.$router.push("/access-vehicle");
+      },
     },
   });
   </script>

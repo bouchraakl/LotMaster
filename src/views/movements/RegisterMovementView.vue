@@ -144,12 +144,12 @@ export default defineComponent({
         const data = response;
         // Set success message
         this.errorMessage.status = "success";
-        this.errorMessage.message = "Movement Opened registered successfully";
+        this.errorMessage.message = "Movement Opened successfully";
       } catch (error: any) {
         this.errorMessage.status = "error";
         if (error.response && error.response.data) {
           const errorMessages = Object.values(error.response.data);
-          this.errorMessage.message = errorMessages.join(", ");
+          this.errorMessage.message = errorMessages.join("");
         } else {
           this.errorMessage.message = "An error occurred during registration.";
         }
