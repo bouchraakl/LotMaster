@@ -92,7 +92,7 @@ export default defineComponent({
       selectedYear: null as number | null,
       selectedMonth: null as number | null,
       currentPage: 0,
-      pageSize: 5,
+      pageSize: 9,
     };
   },
   computed: {

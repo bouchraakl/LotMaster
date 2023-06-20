@@ -108,6 +108,7 @@ export default defineComponent({
       }  catch (error: any) {
         this.errorMessage.status = "error";
         if (error.response && error.response.data) {
+          console.log(error.response.data);
           const errorMessages = Object.values(error.response.data);
           this.errorMessage.message = errorMessages.join("");
         } else {
@@ -121,11 +122,16 @@ export default defineComponent({
         const brandData = await marcaClient.findByNome(this.model.marca.nome);
         if (brandData && brandData.id) {
           this.model.marca.id = brandData.id;
-        } else {
-          console.error("Brand not found");
         }
-      } catch (error) {
-        console.error("Failed to fetch brand ID:", error);
+        
+      } catch (error: any) {
+        this.errorMessage.status = "error";
+        if (error.response && error.response.data) {
+          const errorMessages = Object.values(error.response.data);
+          this.errorMessage.message = errorMessages.join("");
+        } else {
+          this.errorMessage.message = "Vehicle Brand not found.";
+        }
       }
     },
   },
