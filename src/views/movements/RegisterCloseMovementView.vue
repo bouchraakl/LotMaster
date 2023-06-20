@@ -92,7 +92,7 @@ export default defineComponent({
     return {
       condutorAs: "",
       veiculoAs: "",
-      entryAs: "",
+      entryAs: new Date(),
       move: new Movimentacao(),
       errorMessage: {
         status: "", // Possible values: "success", "error"
@@ -140,7 +140,7 @@ export default defineComponent({
         );
         this.condutorAs = response.condutor.cpf;
         this.veiculoAs = response.veiculo.placa;
-        this.entryAs = response.entrada.toString();
+        this.entryAs = response.entrada;
         console.log(this.entryAs);
       } catch (error) {
         console.log(error);
@@ -158,7 +158,8 @@ export default defineComponent({
         if (condutorData && condutorData.id) {
           this.move.condutor.id = condutorData.id;
         }
-        this.move.entrada = new Date(this.entryAs);
+        this.move.entrada = this.entryAs;
+        console.log(this.move);
       } catch (error) {
         console.error("Failed to fetch veiculo ID:", error);
       }
@@ -167,7 +168,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 .moveBtn {
   width: 258px;
   height: 37px;

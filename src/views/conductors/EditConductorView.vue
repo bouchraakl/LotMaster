@@ -145,7 +145,7 @@
   });
   </script>
   
-  <style>
+  <style scoped>
   .moveBtn {
     width: 258px;
     height: 37px;

@@ -139,7 +139,7 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 form{
   height: fit-content;
 }

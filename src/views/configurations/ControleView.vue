@@ -107,6 +107,7 @@ export default defineComponent({
       try {
         const configClient = new ConfiguracaoClient();
          const response = await configClient.findByLast();
+         console.log(response)
          this.openTimeValue = response.inicioExpediente;
          this.closeTimeValue = response.fimExpediente;
          this.hourRateValue = response.valorHora;
@@ -125,8 +126,13 @@ export default defineComponent({
       try {
         const configClient = new ConfiguracaoClient();
         const response = await configClient.findByLast();
-        const editConfigIds = response.id;
+        if(response){
+          const editConfigIds = response.id;
         await this.$router.push({ name: "edit-config", params: { editConfigId: editConfigIds } });
+        }
+        else{
+          await this.$router.push({ name: "edit-config", params: { editConfigId: 0 } });
+        }
       } catch (error) {
         console.error(error);
       }
@@ -136,7 +142,7 @@ export default defineComponent({
 </script>
 
 
-<style>
+<style scoped>
 form{
   height: fit-content;
 }

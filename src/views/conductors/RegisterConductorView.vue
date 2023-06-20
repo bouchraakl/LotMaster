@@ -63,6 +63,8 @@ import { CondutorClient } from "@/client/condutor.client";
 import { Condutor } from "@/model/condutor";
 import { AxiosError } from "axios";
 import { defineComponent } from "vue";
+import { parsePhoneNumberFromString, isValidNumber } from 'libphonenumber-js';
+
 
 export default defineComponent({
   data() {
@@ -78,30 +80,54 @@ export default defineComponent({
     condutorClient() {
       return new CondutorClient();
     },
+    formattedCPF() : string {
+    const cpf = this.condutor.cpf;
+    if (cpf && cpf.length === 11) {
+      return cpf.replace(
+        /^(\d{3})(\d{3})(\d{3})(\d{2})$/,
+        "$1.$2.$3-$4"
+      );
+    }
+    return cpf;
+  },
+  formattedPhone(): boolean {
+  const phone = this.condutor.telefone;
+  const parsedNumber = parsePhoneNumberFromString(phone);
+  return parsedNumber ? isValidNumber(parsedNumber.number.toString(), parsedNumber.country) : false;
+},
+
   },
   methods: {
     async submitForm() {
-      try {
-        const response = await this.condutorClient.save(this.condutor);
-        const data = response;
-        // Set success message
-        this.errorMessage.status = "success";
-        this.errorMessage.message = "Conductor registered successfully";
-      } catch (error: any) {
-        this.errorMessage.status = "error";
-        if (error.response && error.response.data) {
-          const errorMessages = Object.values(error.response.data);
-          this.errorMessage.message = errorMessages.join("");
-        } else {
-          this.errorMessage.message = "An error occurred during registration.";
-        }
-      }
-    },
+      if (!this.condutor.cpf) {
+    this.errorMessage.status = "error";
+    this.errorMessage.message = "Please enter the driver's CPF.";
+    return;
+  }
+
+  try {
+    this.condutor.cpf = this.formattedCPF; // Assign the formatted CPF
+    const response = await this.condutorClient.save(this.condutor);
+    const data = response;
+    // Set success message
+    this.errorMessage.status = "success";
+    this.errorMessage.message = "Conductor registered successfully";
+  } catch (error: any) {
+    this.errorMessage.status = "error";
+    if (error.response && error.response.data) {
+      const errorMessages = Object.values(error.response.data);
+      this.errorMessage.message = errorMessages.join("");
+    } else {
+      this.errorMessage.message = "An error occurred during registration.";
+    }
+  }
+},
+
   },
 });
 </script>
 
-<style>
+<style scoped>
 .moveBtn {
   width: 258px;
   height: 37px;
