@@ -28,6 +28,18 @@ export class ConfiguracaoClient {
         }
     }
 
+    public async findByLast(): Promise<Configuracao> {
+
+        try {
+            const response = await this.axiosClient.get<Configuracao>(`/api/configuracao/last`);
+            return response.data;
+        }catch (error) {
+            return Promise.reject(error);
+        }
+    }
+
+
+
 
     public async findAll(): Promise<Configuracao[]> {
         try {

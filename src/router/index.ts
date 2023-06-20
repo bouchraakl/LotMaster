@@ -20,7 +20,12 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/controle',
     name: 'controle',
-    component: () => import('../views/ControleView.vue')
+    component: () => import('../views/configurations/ControleView.vue')
+  },
+  {
+    path: '/edit-config/:editConfigId',
+    name: 'edit-config',
+    component: () => import('../views/configurations/EditConfigView.vue')
   },
   {
     path: '/register-vehicleBrand',
@@ -32,7 +37,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'access-vehicleBrand',
     component: () => import('../views/car-brands/AccessVehicleBrandView.vue')
   },
-  {
+  { 
     path: '/edit-vehicleBrand/:editBrandId',
     name: 'edit-vehicleBrand',
     component: () => import('../views/car-brands/EditVehicleBrandView.vue')
@@ -82,16 +87,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'edit-conductor',
     component: () => import('../views/conductors/EditConductorView.vue')
   },
-  {
-    path: '/register-config',
-    name: 'register-config',
-    component: () => import('../views/configurations/RegisterConfigView.vue')
-  },
-  {
-    path: '/access-config',
-    name: 'access-config',
-    component: () => import('../views/configurations/AccessConfigView.vue')
-  },
+
   {
     path: '/register-movement',
     name: 'register-movement',
