@@ -19,13 +19,13 @@ LotMaster System is a cutting-edge solution designed to streamline parking lot o
 ## Features
 LotMaster offers a wide range of capabilities to enhance your parking lot management, including:
 
-- Dashboard: A centralized dashboard that provides an overview of the parking lot, including occupancy status, available parking spaces, and revenue information.
-- Effortless Parking Sessions: Initiate and terminate parking sessions with ease, ensuring accurate calculation of duration and fees.
-- Streamlined Vehicle Management: Register and update vehicle information, including license plates and owner details, for efficient tracking.
-- User-Friendly Interface: Enjoy a sleek and intuitive user interface that simplifies the parking management process for both owners and customers.
-- Real-Time Monitoring: Gain complete visibility into parking lot operations, monitor occupancy, and control the allocation of parking spaces.
-- Automated Billing: Generate receipts and invoices for completed parking sessions, enabling seamless payment processing.
-- Customization Options: Tailor the Parking Management System to meet the unique needs of your parking facility, with configurable settings and parameters.
+- **Dashboard**: A centralized dashboard that provides an overview of the parking lot, including occupancy status, available parking spaces, and revenue information.
+- **Effortless Parking Sessions**: Initiate and terminate parking sessions with ease, ensuring accurate calculation of duration and fees.
+- **Streamlined Vehicle Management**: Register and update vehicle information, including license plates and owner details, for efficient tracking.
+- **User-Friendly Interface**: Enjoy a sleek and intuitive user interface that simplifies the parking management process for both owners and customers.
+- **Real-Time Monitoring**: Gain complete visibility into parking lot operations, monitor occupancy, and control the allocation of parking spaces.
+- **Automated Billing**: Generate receipts and invoices for completed parking sessions, enabling seamless payment processing.
+- **Customization Options**: Tailor the Parking Management System to meet the unique needs of your parking facility, with configurable settings and parameters.
 
 ## Technologies Used
 
