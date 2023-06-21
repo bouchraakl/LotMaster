@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://github.com/bouchraakl/ParkingManagerFrontend/assets/97567643/3edf707e-14b2-4a7b-9bdf-96946aa358cc" alt="Image" style=" height: 300px;">
+  <img src="https://github.com/bouchraakl/LotMaster/assets/97567643/61bc4976-a295-4375-8a4e-ad3162f4dc73" alt="Image" style=" height: 300px;">
 </div>
 
 <hr>
