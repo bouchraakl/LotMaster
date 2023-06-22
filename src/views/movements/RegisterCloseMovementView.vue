@@ -1,81 +1,111 @@
 <template>
-  <div
-    class="access-content d-flex flex-column align-items-start justify-content-start"
-  >
-    <p class="title-pages">Register : Close Movement</p>
+  <div class="access-content d-flex flex-column align-items-start justify-content-start">
+    <p class="title-pages">Register: Close Movement</p>
     <div class="form-application d-flex flex-column custom-section">
-      <form
-        class="form-app d-flex flex-column align-items-start mt-4 h-100 gap-3"
-        @submit.prevent="submitForm"
-      >
+      <form class="form-app d-flex flex-column align-items-start mt-4 h-100 gap-3" @submit.prevent="submitForm">
         <div class="d-flex align-items-center align-self-start gap-3">
           <div class="d-flex flex-column">
-            <label for="exampleDataList" class="form-label"
-              >Associated Condutor</label
-            >
-            <input
-              class="form-control"
-              readonly
-              list="datalistOptions"
-              id="exampleDataList"
-              style="width: 300px; color: #909394"
-              v-model="condutorAs"
-            />
+            <label for="exampleDataList" class="form-label">Associated Condutor</label>
+            <input class="form-control" readonly list="datalistOptions" id="exampleDataList"
+              style="width: 300px; color: #909394" v-model="condutorAs" />
           </div>
         </div>
         <div class="d-flex align-items-center align-self-start gap-3">
           <div class="d-flex flex-column">
-            <label for="exampleDataList" class="form-label"
-              >Associated Vehicle</label
-            >
-            <input
-              class="form-control"
-              readonly
-              list="datalistOptions"
-              id="exampleDataList"
-              style="width: 300px; color: #909394"
-              v-model="veiculoAs"
-            />
+            <label for="exampleDataList" class="form-label">Associated Vehicle</label>
+            <input class="form-control" readonly list="datalistOptions" id="exampleDataList"
+              style="width: 300px; color: #909394" v-model="veiculoAs" />
           </div>
         </div>
         <div class="d-flex align-items-center align-self-start gap-3">
           <div class="d-flex flex-column">
             <label for="entry" class="form-label">Entry Date</label>
-            <input
-              class="form-control"
-              readonly
-              type="datetime-local"
-              id="entry"
-              style="width: 300px; color: #909394"
-              v-model="entryAs"
-            />
+            <input class="form-control" readonly type="datetime-local" id="entry" style="width: 300px; color: #909394"
+              v-model="entryAs" />
           </div>
           <div class="d-flex flex-column">
             <label for="exit" class="form-label">Exit Date</label>
-            <input
-              class="form-control"
-              type="datetime-local"
-              id="exit"
-              style="width: 300px"
-              v-model="move.saida"
-            />
+            <input class="form-control" type="datetime-local" id="exit" style="width: 300px" v-model="move.saida" />
           </div>
         </div>
         <!-- Error Message -->
         <div class="mt-3 d-flex align-items-center gap-3">
           <button type="submit">Close Movement</button>
-          <p
-            :class="[
-              'error-message',
-              errorMessage.status === 'success'
-                ? 'text-success'
-                : 'text-danger',
-            ]"
-          >
-            {{ errorMessage.message }}
-          </p>
+          <button @click="showReceipt(move)" data-bs-toggle="modal" data-bs-target="#details" type="button">Show
+            Receipt</button>
+          <p :class="['error-message', errorMessage.status === 'success' ? 'text-success' : 'text-danger']">{{
+            errorMessage.message }}</p>
         </div>
       </form>
+      <!-- Modal -->
+      <div class="modal fade" id="details" tabindex="-1" aria-labelledby="details" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Receipt</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body d-flex justify-content-between align-items-center">
+              <div class="modal-col d-flex flex-column" style="    text-align: start;">
+                <p>Active :</p>
+                <p>Registration Date :</p>
+                <hr>
+                <p>Driver Name :</p>
+                <p>Driver CPF :</p>
+                <p>Driver Phone :</p>
+                <p>Driver Total Payed Hours :</p>
+                <p>Driver Discount Hours :</p>
+                <hr>
+                <p>Vehicle License Plate :</p>
+                <p>Vehicle Brand Name :</p>
+                <p>Vehicle Modal Name :</p>
+                <p>Vehicle Type :</p>
+                <p>Vehicle Year :</p>
+                <p>Vehicle Color :</p>
+                <hr>
+                <p>Entry Date :</p>
+                <p>Exit Date :</p>
+                <p>Total Hours :</p>
+                <p>Total Penalty Hours :</p>
+                <p>Total Discount Hours :</p>
+                <p>Penalty Value :</p>
+                <p>Discount Value :</p>
+                <p>Total Value :</p>
+              </div>
+              <div class="modal-col d-flex flex-column">
+                <p>{{ selectedMove?.ativo }}</p>
+                <p>{{ selectedMove?.cadastro }}</p>
+                <hr>
+                <p>{{ selectedMove?.condutor.nome }}</p>
+                <p>{{ selectedMove?.condutor.cpf }}</p>
+                <p>{{ selectedMove?.condutor.telefone }}</p>
+                <p>{{ selectedMove?.condutor.tempoPagoHoras }}</p>
+                <p>{{ selectedMove?.tempoDesconto }}</p>
+                <hr>
+                <p>{{ selectedMove?.veiculo.placa }}</p>
+                <p>{{ selectedMove?.veiculo.modelo.marca.nome }}</p>
+                <p>{{ selectedMove?.veiculo.modelo.nome }}</p>
+                <p>{{ selectedMove?.veiculo.tipo }}</p>
+                <p>{{ selectedMove?.veiculo.ano }}</p>
+                <p>{{ selectedMove?.veiculo.cor }}</p>
+                <hr>
+                <p>{{ selectedMove?.entrada }}</p>
+                <p>{{ selectedMove?.saida }}</p>
+                <p>{{ selectedMove?.tempoHoras }}</p>
+                <p>{{ selectedMove?.tempoMultaHoras }}</p>
+                <p>{{ selectedMove?.tempoDesconto }}</p>
+                <p>{{ selectedMove?.valorMulta }}</p>
+                <p>{{ selectedMove?.valorDesconto }}</p>
+                <p>{{ selectedMove?.valorTotal }}</p>
+              </div>
+
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -98,6 +128,7 @@ export default defineComponent({
         status: "", // Possible values: "success", "error"
         message: "",
       },
+      selectedMove: null as Movimentacao | null,
     };
   },
   computed: {
@@ -110,6 +141,13 @@ export default defineComponent({
   },
   methods: {
     async submitForm() {
+      // Check if the exit date is null
+      if (this.move.saida == null) {
+        // Set an error message for missing exit date
+        this.setErrorMessage("error", "Exit date is required");
+        return; // Exit the function early
+      }
+
       try {
         // Fetch the veiculo and condutor data
         await this.fetchItems();
@@ -120,28 +158,35 @@ export default defineComponent({
         await this.moveClient.save(this.move);
 
         // Set success message
-        this.errorMessage.status = "success";
-        this.errorMessage.message = "Movement closed successfully";
-      } catch (error: any) {
-        this.errorMessage.status = "error";
-        if (error.response && error.response.data) {
-          const errorMessages = Object.values(error.response.data);
-          this.errorMessage.message = errorMessages.join("");
-        } else {
-          this.errorMessage.message = "An error occurred during registration.";
-        }
+        this.setErrorMessage("success", "Movement closed successfully");
+
+        const moveId = this.move.id;
+        await this.moveClient.delete(Number(this.$route.params.movemId));
+      } catch (error) {
+        // Handle errors during registration
+        this.setErrorMessage("error", "An error occurred during registration.", error);
       }
     },
 
+    setErrorMessage(status: string, message: string, error?: any) {
+      this.errorMessage.status = status; // Set the status property of the errorMessage object
+
+      if (error && error.response && error.response.data) {
+        // If an error object is provided and it has a response with data
+        const errorMessages = Object.values(error.response.data);
+        message = errorMessages.join(""); // Concatenate error messages
+      }
+
+      this.errorMessage.message = message; // Set the message property of the errorMessage object
+    },
+
+
     async fetchOpenMovement() {
       try {
-        const response = await this.moveClient.findById(
-          Number(this.$route.params.movemId)
-        );
+        const response = await this.moveClient.findById(Number(this.$route.params.movemId));
         this.condutorAs = response.condutor.cpf;
         this.veiculoAs = response.veiculo.placa;
         this.entryAs = response.entrada;
-        console.log(this.entryAs);
       } catch (error) {
         console.log(error);
       }
@@ -159,12 +204,35 @@ export default defineComponent({
           this.move.condutor.id = condutorData.id;
         }
         this.move.entrada = this.entryAs;
-        console.log(this.move);
       } catch (error) {
         console.error("Failed to fetch veiculo ID:", error);
       }
     },
+    async showReceipt(move: Movimentacao) {
+      if (move.saida == null) {
+        try {
+          this.fetchItems();
+          const response = await this.moveClient.findById(Number(this.$route.params.movemId));
+          this.selectedMove = response;
+          console.log(this.selectedMove + "move.saida == null");
+
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        try {
+          this.fetchItems();
+          const response = await this.moveClient.findByLast();
+          this.selectedMove = response;
+          console.log(this.selectedMove + "move.saida != null");
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+    }
   },
+
 });
 </script>
 
