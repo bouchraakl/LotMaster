@@ -1,31 +1,15 @@
 <template>
-  <div
-    class="access-content d-flex flex-column align-items-start justify-content-start"
-  >
+  <div class="access-content d-flex flex-column align-items-start justify-content-start">
     <p class="title-pages">Register : Open Movement</p>
     <div class="form-application d-flex flex-column custom-section">
-      <form
-        class="form-app d-flex flex-column align-items-start mt-4 h-100 gap-3"
-        @submit.prevent="submitForm"
-      >
+      <form class="form-app d-flex flex-column align-items-start mt-4 h-100 gap-3" @submit.prevent="submitForm">
         <div class="d-flex align-items-center align-self-start gap-3">
           <div class="d-flex flex-column">
-            <label for="exampleDataList" class="form-label"
-              >Associated Condutor</label
-            >
-            <input
-              class="form-control"
-              list="datalistOptionsCondutor"
-              id="exampleDataList"
-              placeholder="Search By CPF ..."
-              style="width: 300px"
-              v-model="move.condutor.cpf"
-            />
+            <label for="exampleDataList" class="form-label">Associated Condutor</label>
+            <input class="form-control" list="datalistOptionsCondutor" id="exampleDataList"
+              placeholder="Search By CPF ..." style="width: 300px" v-model="move.condutor.cpf" />
             <datalist id="datalistOptionsCondutor">
-              <option
-                v-for="option in datalistOptionsCondutor"
-                :value="option"
-              ></option>
+              <option v-for="option in datalistOptionsCondutor" :value="option"></option>
             </datalist>
           </div>
           <router-link to="/register-conductor" class="align-self-end">
@@ -34,22 +18,11 @@
         </div>
         <div class="d-flex align-items-center align-self-start gap-3">
           <div class="d-flex flex-column">
-            <label for="exampleDataList" class="form-label"
-              >Associated Vehicle</label
-            >
-            <input
-              class="form-control"
-              list="datalistOptionsVeiculo"
-              id="exampleDataList"
-              placeholder="Search By lisence plate ..."
-              style="width: 300px"
-              v-model="move.veiculo.placa"
-            />
+            <label for="exampleDataList" class="form-label">Associated Vehicle</label>
+            <input class="form-control" list="datalistOptionsVeiculo" id="exampleDataList"
+              placeholder="Search By lisence plate ..." style="width: 300px" v-model="move.veiculo.placa" />
             <datalist id="datalistOptionsVeiculo">
-              <option
-                v-for="option in datalistOptionsVeiculo"
-                :value="option"
-              ></option>
+              <option v-for="option in datalistOptionsVeiculo" :value="option"></option>
             </datalist>
           </div>
           <router-link to="/register-vehicle" class="align-self-end">
@@ -59,26 +32,20 @@
         <div class="d-flex align-items-center align-self-start gap-3">
           <div class="d-flex flex-column">
             <label for="entry" class="form-label">Entry Date</label>
-            <input
-              class="form-control"
-              type="datetime-local"
-              id="entry"
-              style="width: 300px"
-              v-model="move.entrada"
-            />
+            <input class="form-control" type="datetime-local" id="entry" style="width: 300px" v-model="move.entrada" />
           </div>
         </div>
         <!-- Error Message -->
         <div class="mt-3 d-flex align-items-center gap-3">
           <button type="submit">Open Movimentation</button>
-          <p
-            :class="[
-              'error-message',
-              errorMessage.status === 'success'
-                ? 'text-success'
-                : 'text-danger',
-            ]"
-          >
+          <router-link to="/access-movement" class="m-0 edits"><button style="width: 250px;">Access Open
+              Movements</button></router-link>
+          <p :class="[
+            'error-message',
+            errorMessage.status === 'success'
+              ? 'text-success'
+              : 'text-danger',
+          ]">
             {{ errorMessage.message }}
           </p>
         </div>
