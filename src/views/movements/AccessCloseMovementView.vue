@@ -7,7 +7,7 @@
         <i class="bi bi-search search-icon "></i>
       </div>
     </div>
-    <div class="filter d-flex align-items-center my-4 gap-4">
+    <div class="filter d-flex align-items-center my-4 gap-4 w-100">
       <div class="filter-container d-flex align-items-center gap-2">
         <label for="year-filter">Year:</label>
         <select id="year-filter" v-model="selectedYear" class="form-select" style="padding: 0.3rem 2rem 0.3rem 0.75rem;">
@@ -172,7 +172,7 @@ export default defineComponent({
       selectedMonth: null as number | null,
       selectedMove: null as Movimentacao | null,
       currentPage: 0,
-      pageSize: 100,
+      pageSize: 8,
     };
   },
   created() {
