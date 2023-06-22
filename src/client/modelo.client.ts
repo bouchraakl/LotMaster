@@ -69,7 +69,7 @@ export class ModeloClient {
 
     public async delete(id: number): Promise<void> {
         try {
-            await this.axiosClient.delete(`/api/modelo?id=${id}`)
+            await this.axiosClient.delete(`http://localhost:8081/api/modelo?id=${id}`)
         } catch (error: any) {
             return Promise.reject(error.response)
         }

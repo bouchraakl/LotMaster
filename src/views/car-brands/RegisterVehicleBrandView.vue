@@ -22,6 +22,8 @@
                 <!-- Error Message -->
                 <div class="mt-3 d-flex align-items-center gap-3">
           <button type="submit">Register Vehicle Brand</button>
+          <router-link to="/access-vehicleBrand" class="router"
+            ><button>Access Vehicle Brands</button></router-link>
           <p
             :class="[
               'error-message',
