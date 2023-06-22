@@ -126,4 +126,15 @@ td {
   transform: translateY(-50%);
   color: #888;
 }
+
+.router{
+  text-decoration: none;
+  font-size: 25px;
+  margin-left: auto;
+  align-self: end;
+  margin-right: 25px;
+  cursor: pointer;
+  margin-top: 5px;
+  color: #000;
+}
 </style>
