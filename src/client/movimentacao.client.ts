@@ -28,6 +28,17 @@ export class MovimentacaoClient {
         }
     }
 
+    public async findByLast(): Promise<Movimentacao> {
+
+        try {
+            const response = await this.axiosClient.get<Movimentacao>(`/api/movimentacao/last`);
+            return response.data;
+        }catch (error) {
+            return Promise.reject(error);
+        }
+    }
+
+
 
     public async findAll(): Promise<Movimentacao[]> {
         try {
