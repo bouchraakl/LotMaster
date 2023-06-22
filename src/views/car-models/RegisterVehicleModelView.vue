@@ -44,6 +44,8 @@
                         <!-- Error Message -->
                         <div class="mt-3 d-flex align-items-center gap-3">
           <button type="submit">Register Vehicle Model</button>
+          <router-link to="/access-vehicleModel" class="m-0"
+            ><button>Access Vehicle Models</button></router-link>
           <p
             :class="[
               'error-message',

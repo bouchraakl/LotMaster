@@ -7,7 +7,7 @@
         <i class="bi bi-search search-icon "></i>
       </div>
     </div>
-    <div class="filter d-flex align-items-center my-4 gap-4">
+    <div class="filter d-flex align-items-center my-4 gap-4 w-100">
       <div class="filter-container d-flex align-items-center gap-2">
         <label for="year-filter">Year:</label>
         <select id="year-filter" v-model="selectedYear" class="form-select" style="padding: 0.3rem 2rem 0.3rem 0.75rem;">
@@ -23,6 +23,7 @@
           <option v-for="month in 12" :value="month">{{ month }}</option>
         </select>
       </div>
+      <router-link to="/register-conductor" class="router"><i class="bi bi-plus-square"></i></router-link>
     </div>
     <table class="table table-sm table-bordered w-100">
       <thead>

@@ -42,6 +42,8 @@
         <!-- Error Message -->
         <div class="mt-3 d-flex align-items-center gap-3">
           <button type="submit">Register Driver</button>
+          <router-link to="/access-conductor" class="m-0"
+            ><button>Access Drivers</button></router-link>
           <p
             :class="[
               'error-message',

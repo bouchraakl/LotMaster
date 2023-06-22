@@ -85,6 +85,8 @@
         <!-- Error Message -->
         <div class="mt-4 d-flex align-items-center gap-3">
           <button type="submit">Register Vehicle</button>
+          <router-link to="/access-vehicle" class="m-0"
+            ><button>Access Vehicles</button></router-link>
           <p
             :class="[
               'error-message',
