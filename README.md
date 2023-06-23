@@ -60,7 +60,7 @@ Follow the instructions below to get the LotMaster System up and running on your
 1. Clone this repository to your local machine using:
 
    ```shell
-   git clone https://github.com/bouchraakl/ParkingManagerBackend.git
+   git clone https://github.com/bouchraakl/LotMaster.git
    
 2. Navigate to the project directory in your preferred IDE.
 3. Install the project dependencies by running the following command:
