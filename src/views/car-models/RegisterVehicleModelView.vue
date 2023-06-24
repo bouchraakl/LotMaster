@@ -1,29 +1,16 @@
 <template>
-  <div
-    class="access-content d-flex flex-column align-items-start justify-content-start"
-  >
+  <div class="access-content d-flex flex-column align-items-start justify-content-start">
     <p class="title-pages">Register : Vehicle Model</p>
     <div class="form-application d-flex flex-column custom-section">
-      <form
-        class="form-app d-flex flex-column align-items-start mt-4 h-100 gap-3"
-        @submit.prevent="submitForm"
-      >
+      <form class="form-app d-flex flex-column align-items-start mt-4 h-100 gap-3" @submit.prevent="submitForm">
         <div class="d-flex align-items-center align-self-start gap-3">
           <div class="d-flex flex-column">
             <label for="brands" class="form-label">Associated Brand</label>
-            <input
-              class="form-control"
-              list="datalistOptions"
-              id="brands"
-              style="width: 300px"
-              v-model="model.marca.nome"
-            />
+            <input class="form-control" list="datalistOptions" id="brands" style="width: 300px"
+              v-model="model.marca.nome" />
 
             <datalist id="datalistOptions">
-              <option
-                v-for="option in datalistOptions"
-                :value="option"
-              ></option>
+              <option v-for="option in datalistOptions" :value="option"></option>
             </datalist>
           </div>
           <router-link to="/register-vehicleBrand" class="align-self-end">
@@ -33,27 +20,19 @@
         <div class="d-flex align-items-center align-self-start gap-3">
           <div class="d-flex flex-column">
             <label for="modelname" class="form-label">Model Name</label>
-            <input
-              class="form-control"
-              id="modelname"
-              style="width: 300px"
-              v-model="model.nome"
-            />
+            <input class="form-control" id="modelname" style="width: 300px" v-model="model.nome" />
           </div>
         </div>
-                        <!-- Error Message -->
-                        <div class="mt-3 d-flex align-items-center gap-3">
+        <!-- Error Message -->
+        <div class="mt-3 d-flex align-items-center gap-3">
           <button type="submit">Register Vehicle Model</button>
-          <router-link to="/access-vehicleModel" class="m-0"
-            ><button>Access Vehicle Models</button></router-link>
-          <p
-            :class="[
-              'error-message',
-              errorMessage.status === 'success'
-                ? 'text-success'
-                : 'text-danger',
-            ]"
-          >
+          <router-link to="/access-vehicleModel" class="m-0"><button>Access Vehicle Models</button></router-link>
+          <p :class="[
+            'error-message',
+            errorMessage.status === 'success'
+              ? 'text-success'
+              : 'text-danger',
+          ]">
             {{ errorMessage.message }}
           </p>
         </div>
@@ -104,10 +83,10 @@ export default defineComponent({
         await this.fetchBrandId();
         const response = await this.modelClient.save(this.model);
         const data = response;
-         // Set success message
-         this.errorMessage.status = "success";
+        // Set success message
+        this.errorMessage.status = "success";
         this.errorMessage.message = "Vehicle Model registered successfully";
-      }  catch (error: any) {
+      } catch (error: any) {
         this.errorMessage.status = "error";
         if (error.response && error.response.data) {
           console.log(error.response.data);
@@ -125,7 +104,7 @@ export default defineComponent({
         if (brandData && brandData.id) {
           this.model.marca.id = brandData.id;
         }
-        
+
       } catch (error: any) {
         this.errorMessage.status = "error";
         if (error.response && error.response.data) {

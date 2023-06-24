@@ -104,24 +104,36 @@ export default defineComponent({
   },
   methods: {
     async submitForm() {
-      try {
-        await this.fetchCondutorId();
-        await this.fetchVeiculoId();
-        const response = await this.moveClient.save(this.move);
-        const data = response;
-        // Set success message
-        this.errorMessage.status = "success";
-        this.errorMessage.message = "Movement Opened successfully";
-      } catch (error: any) {
-        this.errorMessage.status = "error";
-        if (error.response && error.response.data) {
-          const errorMessages = Object.values(error.response.data);
-          this.errorMessage.message = errorMessages.join("");
-        } else {
-          this.errorMessage.message = "An error occurred during registration.";
-        }
-      }
-    },
+  try {
+    await this.fetchCondutorId();
+    await this.fetchVeiculoId();
+
+    // Check if there is an open Movimentacao with the specified vehicle plate
+    const movimentacoesAbertas = await this.moveClient.findAllByOpen(this.move.veiculo.placa);
+    if (movimentacoesAbertas.length > 0) {
+      // An open Movimentacao already exists with the same vehicle plate
+      this.errorMessage.status = "error";
+      this.errorMessage.message = "There is already an open movement for this vehicle plate.";
+      return; // Stop further execution
+    }
+
+    // No open Movimentacao found, proceed with saving
+    const response = await this.moveClient.save(this.move);
+    const data = response;
+    // Set success message
+    this.errorMessage.status = "success";
+    this.errorMessage.message = "Movement Opened successfully";
+  } catch (error: any) {
+    this.errorMessage.status = "error";
+    if (error.response && error.response.data) {
+      const errorMessages = Object.values(error.response.data);
+      this.errorMessage.message = errorMessages.join("");
+    } else {
+      this.errorMessage.message = "An error occurred during registration.";
+    }
+  }
+},
+
 
     async fetchCondutorId() {
       try {
