@@ -50,14 +50,19 @@ export class MovimentacaoClient {
         }
     }
 
-    public async findAllByOpen(): Promise<Movimentacao[]> {
+    public async findAllByOpen(placa : string): Promise<Movimentacao[]> {
         try {
-            const response = await this.axiosClient.get<Movimentacao[]>('/api/movimentacao/abertas');
-            return response.data;
-        } catch (error) {
+            if (placa && placa.length > 0) {
+              const response = await this.axiosClient.get<Movimentacao[]>(`/api/movimentacao/abertas?placa=${placa}`);
+              return response.data;
+            } else {
+              const response = await this.axiosClient.get<Movimentacao[]>('/api/movimentacao/abertas');
+              return response.data;
+            }
+          } catch (error) {
             console.error(error);
             return []; // Return an empty array if there's an error
-        }
+          }
     }
 
     public async findAllByClose(): Promise<Movimentacao[]> {
