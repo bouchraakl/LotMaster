@@ -71,9 +71,10 @@
         <div class="footer d-flex flex-column align-self-start">
           <p class="footerTitle">Total Day Win</p>
           <div class="gainsMoney d-flex justify-content-between align-items-center gap-3">
-            <span class="moneyGain">${{ dayGain.toFixed(2) }}</span>
-            <i class="bi bi-arrow-down-up"></i>
-          </div>
+  <span class="moneyGain">${{ dayGain.toFixed(2) }}</span>
+  <i :class="{'bi bi-arrow-down-up': previousDayGain == dayGain, 'bi bi-arrow-down-up text-success': previousDayGain < dayGain, 'bi bi-arrow-down-up text-danger': previousDayGain > dayGain}"></i>
+</div>
+
         </div>
       </div>
     </div>
@@ -94,6 +95,7 @@ export default defineComponent({
       movimentacoes: [] as Movimentacao[],
       moveOpen: [] as Movimentacao[],
       moveClose: [] as Movimentacao[],
+      previousDayGain: 0 // Initialize previousDayGain with 0
     };
   },
   computed: {
@@ -109,6 +111,7 @@ export default defineComponent({
     this.fetchMovimentacoes();
     this.fetchMovimentacoesOpen();
     this.fetchMovimentacoesClose();
+    this.retrievePreviousDayGain();
   },
   methods: {
     async fetchMovimentacoes() {
@@ -124,7 +127,7 @@ export default defineComponent({
     async fetchMovimentacoesOpen() {
       try {
         const moveClient = new MovimentacaoClient();
-        const response = await moveClient.findAllByOpen();
+        const response = await moveClient.findAllByOpen('');
         this.moveOpen = response;
       } catch (error) {
         console.error(error);
@@ -136,6 +139,15 @@ export default defineComponent({
         const moveClient = new MovimentacaoClient();
         const response = await moveClient.findAllByClose();
         this.moveClose = response;
+
+        // Store dayGain in local storage with the current date
+        const gainData = {
+          date: this.formattedDate,
+          gain: this.dayGain
+        };
+
+        const key = 'dayGain-' + this.formattedDate;  // Append date to the key name
+        localStorage.setItem(key, JSON.stringify(gainData));
       } catch (error) {
         console.error(error);
       }
@@ -150,10 +162,25 @@ export default defineComponent({
           query: { licensePlate: movimentacao.veiculo.placa }
         }
       }
-    }
+    },
+
+    retrievePreviousDayGain() {
+      const yesterday = new Date();
+      yesterday.setDate(yesterday.getDate() - 1); // Get yesterday's date
+
+      const options = { weekday: 'long', day: 'numeric', month: 'long' };
+      const formattedYesterday = yesterday.toLocaleString('en-US', options as Intl.DateTimeFormatOptions);
+      const key = 'dayGain-' + formattedYesterday;
+
+      const previousDayData = localStorage.getItem(key);
+      if (previousDayData) {
+        const { gain } = JSON.parse(previousDayData);
+        this.previousDayGain = gain;
+      }
 
 
   },
+}
 });
 </script>
 
