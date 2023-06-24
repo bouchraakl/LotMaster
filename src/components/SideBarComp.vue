@@ -2,7 +2,7 @@
   <div class="d-flex flex-column align-items-center p-4 bg-light h-100 sidebar" style="width: 200px;">
     <div class="d-flex align-items-center justify-content-center mb-md-0 me-md-auto link-dark text-decoration-none"
       style="width: 100%;">
-      <img :src="require('@/assets/lotmaster-high-resolution-logo-color-on-transparent-background (1).png')" alt="logo" class="logo" width="130" height="30">
+      <img :src="require('@/assets/lotmaster-high-resolution-logo-color-on-transparent-background (1).png')" alt="logo" class="logo" width="200" height="35">
       <!-- <span class="logo">LOTMASTER</span> -->
     </div>
     <hr class="w-100">
