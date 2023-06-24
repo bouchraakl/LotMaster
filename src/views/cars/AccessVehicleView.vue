@@ -10,7 +10,7 @@
     </div>
     <div class="filter d-flex align-items-center my-4 gap-4 w-100">
       <div class="filter-container d-flex align-items-center gap-2">
-        <label for="year-filter">Year:</label>
+        <label for="year-filter">Year</label>
         <select id="year-filter" v-model="selectedYear" class="form-select" style="padding: 0.3rem 2rem 0.3rem 0.75rem;">
           <option value="">All</option>
           <option v-for="year in selectableYears" :value="year">{{ year }}</option>
@@ -18,7 +18,7 @@
       </div>
 
       <div class="filter-container d-flex align-items-center gap-2">
-        <label for="month-filter">Month:</label>
+        <label for="month-filter">Month</label>
         <select id="month-filter" v-model="selectedMonth" class="form-select">
           <option value="">All</option>
           <option v-for="month in 12" :value="month">{{ month }}</option>
@@ -26,7 +26,7 @@
       </div>
 
       <div class="filter-container d-flex align-items-center gap-2">
-        <label for="tipo-filter">Type:</label>
+        <label for="tipo-filter">Type</label>
         <select id="tipo-filter" v-model="selectedTipo" class="form-select">
           <option value="">All</option>
           <option v-for="tipo in selectableTipos" :value="tipo">{{ tipo }}</option>
@@ -34,7 +34,7 @@
       </div>
 
       <div class="filter-container d-flex align-items-center gap-2">
-        <label for="carro-filter">Color:</label>
+        <label for="carro-filter">Color</label>
         <select id="carro-filter" v-model="selectedCores" class="form-select">
           <option value="">All</option>
           <option v-for="cores in availableCores" :value="cores">{{ cores }}</option>
