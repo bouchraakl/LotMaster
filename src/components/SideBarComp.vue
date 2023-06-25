@@ -21,10 +21,6 @@
         <i class="bi bi-box-arrow-up-right" width="16" height="16"></i>
         <router-link to="/access" class="custom-link text-decoration-none">Access</router-link>
       </li>
-      <li class="nav-item d-flex justify-content-center align-items-center custom-li" :class="{ 'active': activeLink === 'reports' }" @click="activeLink = 'reports'">
-        <i class="bi bi-filetype-pdf" width="16" height="16"></i>
-        <router-link to="/reports" class="custom-link text-decoration-none">Reports</router-link>
-      </li>
       <li class="nav-item d-flex justify-content-center align-items-center custom-li" :class="{ 'active': activeLink === 'controle' }"
         @click="activeLink = 'controle'">
         <i class="bi bi-toggles" width="16" height="16"></i>

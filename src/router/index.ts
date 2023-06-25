@@ -18,11 +18,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/AccessView.vue')
   },
   {
-    path: '/reports',
-    name: 'reports',
-    component: () => import('../views/ReportsView.vue')
-  },
-  {
     path: '/controle',
     name: 'controle',
     component: () => import('../views/configurations/ControleView.vue')
