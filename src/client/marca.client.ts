@@ -21,7 +21,7 @@ export class MarcaClient {
 
     public async findByNome(nome: string): Promise<Marca> {
         try {
-          const response = await axios.get<Marca>(`http://localhost:8081/api/marca/nome?nome=${nome}`)
+          const response = await axios.get<Marca>(`http://localhost:8081/api/marca/nome/${nome}`)
       
           return response.data;
 

@@ -273,9 +273,9 @@ export default defineComponent({
   width: 100%;
 }
 
-.filter {
+/* .filter {
   margin-left: 30px;
-}
+} */
 
 .filter-container {
   display: flex;
@@ -308,6 +308,6 @@ export default defineComponent({
 
 .router {
   text-decoration: none;
-  color: white;
+  color: #000;
 }
 </style>

@@ -152,18 +152,15 @@ export default defineComponent({
         console.error("Failed to fetch model ID:", error);
       }
     },
-
     async calculatedBrand() {
       const modelClient = new ModeloClient();
       const associatedModel = this.datalistOptions.find(
         (model) => model === this.vehicle.modelo.nome
       );
-
       if (associatedModel) {
         try {
-          // Fetch associated brand based on the selected model name
           const brandData = await modelClient.findByNome(associatedModel);
-          console.log(brandData);
+          console.log(associatedModel);
           if (brandData && brandData.marca && brandData.marca.nome) {
             this.vehicle.modelo.marca = brandData.marca;
             this.vehicle.modelo.marca.nome = brandData.marca.nome;
