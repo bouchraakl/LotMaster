@@ -248,7 +248,7 @@ export default defineComponent({
 
     cancelEdit() {
       // Method for canceling the edit and redirecting to a specific route
-      this.$router.push("/access-movement");
+      this.$router.push("/access-closemovement");
     },
   },
 });
