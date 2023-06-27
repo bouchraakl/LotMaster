@@ -22,7 +22,7 @@ LotMaster System is a cutting-edge solution designed to streamline parking lot o
 <img width="932" alt="image" src="https://github.com/bouchraakl/LotMaster/assets/97567643/f9185d40-5676-4532-881e-54693ddcd927">
 
 ## Demo 
-[Demo Link For the application](bouchraakl.github.io/LotMaster/).
+[Demo Link For The Application](bouchraakl.github.io/LotMaster/).
 
 ## Features
 LotMaster offers a wide range of capabilities to enhance your parking lot management, including:
