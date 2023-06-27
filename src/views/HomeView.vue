@@ -52,7 +52,7 @@
     </div>
     <div class="cards d-flex align-items-center gap-3">
       <div class="card cars d-flex flex-column justify-content-evenly align-items-center">
-        <router-link to="/register/vehicle" class=" align-self-end">
+        <router-link to="/register-vehicle" class=" align-self-end">
           <img :src="require('@/assets/open tab.png')" alt="open tab" class="openTab">
         </router-link>
         <img :src="require('@/assets/back view of toy car turn right blue.png')" alt="car" class="registerCarImage">

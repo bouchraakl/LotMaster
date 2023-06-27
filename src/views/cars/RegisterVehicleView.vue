@@ -20,6 +20,10 @@
               <option v-for="option in datalistOptions" :value="option"></option>
             </datalist>
           </div>
+          <div class="d-flex flex-column">
+            <label for="brand" class="form-label">Associated Brand</label>
+            <input class="form-control" id="brand" style="width: 300px" v-model="ascBrand" disabled />
+          </div>
           <router-link to="/register-vehicleModel" class="align-self-end">
             <button class="moveBtn m-0">Or Register New Model</button>
           </router-link>
@@ -86,19 +90,25 @@ export default defineComponent({
         status: "", // Possible values: "success", "error"
         message: "",
       },
+      ascBrand: "",
     };
   },
   async mounted() {
-  try {
-    const modelClient = new ModeloClient();
-    const vehicleData = await modelClient.findAll();
-    this.datalistOptions = vehicleData.map((model) => model.nome);
-    console.log(this.datalistOptions);
-  } catch (error) {
-    console.error("Failed to fetch vehicle data:", this.datalistOptions);
-  }
-},
-
+    try {
+      const modelClient = new ModeloClient();
+      const vehicleData = await modelClient.findAll();
+      this.datalistOptions = vehicleData.map((model) => model.nome);
+    } catch (error) {
+      console.error("Failed to fetch vehicle data:", this.datalistOptions);
+    }
+  
+  },
+  watch: {
+    'vehicle.modelo.nome': {
+      immediate: true,
+      handler: 'calculatedBrand',
+    },
+  },
   computed: {
     vehicleClient() {
       return new VeiculoClient();
@@ -140,9 +150,34 @@ export default defineComponent({
         console.error("Failed to fetch model ID:", error);
       }
     },
+
+    async calculatedBrand() {
+      const modelClient = new ModeloClient();
+      const associatedModel = this.datalistOptions.find(
+        (model) => model === this.vehicle.modelo.nome
+      );
+
+      if (associatedModel) {
+        try {
+          const brandData = await modelClient.findByNome(associatedModel);
+          console.log(brandData);
+          if (brandData && brandData.marca && brandData.marca.nome) {
+            this.vehicle.modelo.marca = brandData.marca;
+            this.vehicle.modelo.marca.nome = brandData.marca.nome;
+this.ascBrand = brandData.marca.nome;
+          } else {
+            console.error("Brand not found");
+          }
+        } catch (error) {
+          console.error("Failed to fetch associated brand:", error);
+        }
+      }
+    },
+
   },
 });
 </script>
+
 
 <style scoped>
 .moveBtn {
