@@ -1,7 +1,13 @@
+<div align=center>
+  <img src="https://github.com/bouchraakl/LotMaster/assets/97567643/c15d1ad1-bbb0-400b-b699-cb016232c508">
+</div>
+<hr>
 LotMaster System is a cutting-edge solution designed to streamline parking lot operations and enhance customer service. This comprehensive system offers a multitude of  features and leverages a range of technologies, empowering parking lot owners to efficiently manage parking spaces and provide an exceptional experience for their customers. With a sleek and intuitive user interface, the Parking Management System Frontend ensures seamless parking sessions, vehicle management, user administration, and comprehensive control over parking facility operations.
 
 ## Table of Contents
 
+- [Main Screen](#main-screen)
+- [Demo](#demo)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Getting Started](#getting-started)
@@ -10,6 +16,13 @@ LotMaster System is a cutting-edge solution designed to streamline parking lot o
   - [Running the Application](#running-the-application)
   - [Building for Production](#building-for-production)
 - [Backend and API Documentation](#backend-and-api-documentation)
+
+## Main Screen
+
+<img width="932" alt="image" src="https://github.com/bouchraakl/LotMaster/assets/97567643/f9185d40-5676-4532-881e-54693ddcd927">
+
+## Demo 
+[Demo Link For the application](bouchraakl.github.io/LotMaster/).
 
 ## Features
 LotMaster offers a wide range of capabilities to enhance your parking lot management, including:
