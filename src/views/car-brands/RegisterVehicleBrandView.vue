@@ -1,37 +1,25 @@
 <template>
-  <div
-    class="access-content d-flex flex-column align-items-start justify-content-start"
-  >
-    <p class="title-pages">Register : Vehicle Brand</p>
+  <div class="access-content d-flex flex-column align-items-start justify-content-start">
+    <!-- Displaying the title of the registration page -->
+    <p class="title-pages">Register: Vehicle Brand</p>
     <div class="form-application d-flex flex-column custom-section">
-      <form
-        class="form-app d-flex flex-column align-items-start mt-4 h-100 gap-3"
-        @submit.prevent="submitForm"
-      >
+      <!-- Form for registering a new vehicle brand -->
+      <form class="form-app d-flex flex-column align-items-start mt-4 h-100 gap-3" @submit.prevent="submitForm">
         <div class="d-flex align-items-center align-self-start gap-3">
           <div class="d-flex flex-column">
             <label for="brand" class="form-label">Vehicle Brand Name</label>
-            <input
-              class="form-control"
-              id="brand"
-              style="width: 300px"
-              v-model="brand.nome"
-            />
+            <!-- Input field for entering the brand name -->
+            <input class="form-control" id="brand" style="width: 300px" v-model="brand.nome" />
           </div>
         </div>
-                <!-- Error Message -->
-                <div class="mt-3 d-flex align-items-center gap-3">
+        <!-- Error Message -->
+        <div class="mt-3 d-flex align-items-center gap-3">
+          <!-- Button to register the vehicle brand -->
           <button type="submit">Register Vehicle Brand</button>
-          <router-link to="/access-vehicleBrand"
-            ><button>Access Vehicle Brands</button></router-link>
-          <p
-            :class="[
-              'error-message',
-              errorMessage.status === 'success'
-                ? 'text-success'
-                : 'text-danger',
-            ]"
-          >
+          <!-- Button to navigate to the vehicle brand page -->
+          <router-link to="/access-vehicleBrand"><button>Access Vehicle Brands</button></router-link>
+          <!-- Displaying success or error message -->
+          <p :class="['error-message', errorMessage.status === 'success' ? 'text-success' : 'text-danger']">
             {{ errorMessage.message }}
           </p>
         </div>
@@ -62,6 +50,7 @@ export default defineComponent({
   },
   methods: {
     async submitForm() {
+      // Method to submit the form and register a new vehicle brand
       try {
         const response = await this.brandClient.save(this.brand);
         const data = response;

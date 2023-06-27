@@ -74,10 +74,12 @@
 </template>
 
 <script lang="ts">
+// This component represents a view for displaying and managing vehicle brands.
+// It includes a search functionality, filters by year and month, pagination, and CRUD operations.
+
 import { computed, defineComponent } from "vue";
 import { Marca } from "@/model/marca";
 import { MarcaClient } from "@/client/marca.client";
-import axios from "axios";
 import { PageRequest } from "@/model/pagesModel/page-request";
 import { PageResponse } from "@/model/pagesModel/page-response";
 
@@ -85,48 +87,49 @@ export default defineComponent({
   name: "VehicleBrandView",
   data() {
     return {
-      brands: [] as Marca[],
-      searchQuery: "",
-      selectedYear: null as number | null,
-      selectedMonth: null as number | null,
-      currentPage: 0,
-      pageSize: 7,
+      brands: [] as Marca[],               // Holds the list of vehicle brands
+      searchQuery: "",                     // Stores the search query entered by the user
+      selectedYear: null as number | null, // Stores the selected year filter
+      selectedMonth: null as number | null, // Stores the selected month filter
+      currentPage: 0,                      // Stores the current page number for pagination
+      pageSize: 7,                         // Specifies the number of items per page
     };
   },
   computed: {
-
     brandFilter(): Marca[] {
-  if (!this.searchQuery && !this.selectedYear && !this.selectedMonth) {
-    return this.brands.slice().sort((a: Marca, b: Marca) => a.id - b.id);
-  } else {
-    const lowerCaseQuery = this.searchQuery.toLowerCase();
-    return this.brands.filter((brand: Marca) => {
-      const registerDate = new Date(brand.cadastro);
-      const registerYear = registerDate.getFullYear();
-      const registerMonth = registerDate.getMonth() + 1;
-
-      const matchesQuery =
-        brand.id.toString().toLowerCase().includes(lowerCaseQuery) ||
-        brand.nome.toString().toLowerCase().includes(lowerCaseQuery);
-
-      if (this.selectedYear && this.selectedMonth) {
-        return (
-          matchesQuery &&
-          registerYear === this.selectedYear &&
-          registerMonth === this.selectedMonth
-        );
-      } else if (this.selectedYear) {
-        return matchesQuery && registerYear === this.selectedYear;
-      } else if (this.selectedMonth) {
-        return matchesQuery && registerMonth === this.selectedMonth;
+      // Filters the brands based on search query, year, and month filters
+      if (!this.searchQuery && !this.selectedYear && !this.selectedMonth) {
+        return this.brands.slice().sort((a: Marca, b: Marca) => a.id - b.id);
       } else {
-        return matchesQuery;
+        const lowerCaseQuery = this.searchQuery.toLowerCase();
+        return this.brands.filter((brand: Marca) => {
+          const registerDate = new Date(brand.cadastro);
+          const registerYear = registerDate.getFullYear();
+          const registerMonth = registerDate.getMonth() + 1;
+
+          const matchesQuery =
+            brand.id.toString().toLowerCase().includes(lowerCaseQuery) ||
+            brand.nome.toString().toLowerCase().includes(lowerCaseQuery);
+
+          if (this.selectedYear && this.selectedMonth) {
+            return (
+              matchesQuery &&
+              registerYear === this.selectedYear &&
+              registerMonth === this.selectedMonth
+            );
+          } else if (this.selectedYear) {
+            return matchesQuery && registerYear === this.selectedYear;
+          } else if (this.selectedMonth) {
+            return matchesQuery && registerMonth === this.selectedMonth;
+          } else {
+            return matchesQuery;
+          }
+        }).sort((a: Marca, b: Marca) => a.id - b.id);
       }
-    }).sort((a: Marca, b: Marca) => a.id - b.id);
-  }
-},
+    },
 
     selectableYears(): number[] {
+      // Generates a list of selectable years for the year filter
       const currentYear = new Date().getFullYear();
       const years = [];
       for (let year = 2019; year <= currentYear; year++) {
@@ -136,10 +139,12 @@ export default defineComponent({
     },
   },
   mounted() {
+    // Fetches the initial list of vehicle brands when the component is mounted
     this.fetchBrands();
   },
   methods: {
     async fetchBrands() {
+      // Retrieves the list of vehicle brands from the server using pagination
       try {
         const pageRequest = new PageRequest();
         pageRequest.currentPage = this.currentPage;
@@ -153,12 +158,14 @@ export default defineComponent({
       }
     },
     formatDate(dateString: string | number | Date) {
+      // Formats a date string or object to a readable date and time format
       const dateTime = new Date(dateString);
       const formattedDate = dateTime.toLocaleDateString();
       const formattedTime = dateTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
       return `${formattedDate} ${formattedTime}`;
     },
     async deleteItem(brand: Marca) {
+      // Deletes a vehicle brand from the server and updates the brands list
       const confirmation = confirm("Are you sure you want to delete this vehicle brand?");
       if (!confirmation) {
         return;
@@ -173,6 +180,7 @@ export default defineComponent({
       }
     },
     async editItem(brand: Marca) {
+      // Redirects to the edit page for a specific vehicle brand
       try {
         const brandClient = new MarcaClient();
         const editBrandIds = brand.id;
@@ -182,12 +190,14 @@ export default defineComponent({
       }
     },
     previousPage() {
+      // Navigates to the previous page of brands (pagination)
       if (this.currentPage > 0) {
         this.currentPage--;
         this.fetchBrands();
       }
     },
     nextPage() {
+      // Navigates to the next page of brands (pagination)
       if (this.brandFilter.length === this.pageSize) {
         this.currentPage++;
         this.fetchBrands();
@@ -195,6 +205,7 @@ export default defineComponent({
     },
   },
 });
+
 </script>
 
 <style scoped>
@@ -206,5 +217,4 @@ export default defineComponent({
 .pagination-container {
   margin-right: 3rem;
 }
-
 </style>
