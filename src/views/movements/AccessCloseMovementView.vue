@@ -1,12 +1,15 @@
 <template>
   <div class="access-content d-flex flex-column align-items-start justify-content-start">
+    <!-- Header -->
     <div class="header d-flex align-content-start justify-content-between m-0">
-      <p class="title-pages">Access : Closed Movements</p>
+      <p class="title-pages">Access: Closed Movements</p>
       <div class="search-container">
         <input type="text" class="search-input" placeholder="Search By license plate or name..." v-model="searchQuery" />
-        <i class="bi bi-search search-icon "></i>
+        <i class="bi bi-search search-icon"></i>
       </div>
     </div>
+
+    <!-- Filters -->
     <div class="filter d-flex align-items-center my-4 gap-4 w-100">
       <div class="filter-container d-flex align-items-center gap-2">
         <label for="year-filter">Year:</label>
@@ -24,6 +27,8 @@
         </select>
       </div>
     </div>
+
+    <!-- Table -->
     <table class="table table-sm table-bordered w-100">
       <thead>
         <tr>
@@ -38,6 +43,7 @@
         </tr>
       </thead>
       <tbody>
+        <!-- Table rows -->
         <tr v-for="close in closeFilter" :key="close.id">
           <td>{{ close.id }}</td>
           <td>{{ close.ativo }}</td>
@@ -49,9 +55,11 @@
           <td>
             <div class="d-flex justify-content-center gap-2">
               <button class="btn btn-sm btn-primary" @click="editItem(close)" style="width: 45px;height: 30px;">
-                <i class="bi bi-pencil-square"></i></button>
+                <i class="bi bi-pencil-square"></i>
+              </button>
               <button class="btn btn-sm btn-danger" @click="deleteItem(close)" style="width: 45px;height: 30px;">
-                <i class="bi bi-trash"></i></button>
+                <i class="bi bi-trash"></i>
+              </button>
               <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#details"
                 style="width: 45px;height: 30px;color: #fff;font-weight: bold;" @click="viewItem(close)">
                 <i class="bi bi-eye"></i>
@@ -61,7 +69,8 @@
         </tr>
       </tbody>
     </table>
-    <!-- Modal -->
+
+    <!-- Movement Details Modal -->
     <div class="modal fade" id="details" tabindex="-1" aria-labelledby="details" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -70,34 +79,36 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body d-flex justify-content-between align-items-center">
-            <div class="modal-col d-flex flex-column" style="    text-align: start;">
-              <p>Movement ID :</p>
-              <p>Active :</p>
-              <p>Registration Date :</p>
+            <div class="modal-col d-flex flex-column" style="text-align: start;">
+              <!-- Left column -->
+              <p>Movement ID:</p>
+              <p>Active:</p>
+              <p>Registration Date:</p>
               <hr>
-              <p>Driver Name :</p>
-              <p>Driver CPF :</p>
-              <p>Driver Phone :</p>
-              <p>Driver Total Payed Hours :</p>
-              <p>Driver Discount Hours :</p>
+              <p>Driver Name:</p>
+              <p>Driver CPF:</p>
+              <p>Driver Phone:</p>
+              <p>Driver Total Payed Hours:</p>
+              <p>Driver Discount Hours:</p>
               <hr>
-              <p>Vehicle License Plate :</p>
-              <p>Vehicle Brand Name :</p>
-              <p>Vehicle Modal Name :</p>
-              <p>Vehicle Type :</p>
-              <p>Vehicle Year :</p>
-              <p>Vehicle Color :</p>
+              <p>Vehicle License Plate:</p>
+              <p>Vehicle Brand Name:</p>
+              <p>Vehicle Modal Name:</p>
+              <p>Vehicle Type:</p>
+              <p>Vehicle Year:</p>
+              <p>Vehicle Color:</p>
               <hr>
-              <p>Entry Date :</p>
-              <p>Exit Date :</p>
-              <p>Total Hours :</p>
-              <p>Total Penalty Hours :</p>
-              <p>Total Discount Hours :</p>
-              <p>Penalty Value :</p>
-              <p>Discount Value :</p>
-              <p>Total Value :</p>
+              <p>Entry Date:</p>
+              <p>Exit Date:</p>
+              <p>Total Hours:</p>
+              <p>Total Penalty Hours:</p>
+              <p>Total Discount Hours:</p>
+              <p>Penalty Value:</p>
+              <p>Discount Value:</p>
+              <p>Total Value:</p>
             </div>
             <div class="modal-col d-flex flex-column">
+              <!-- Right column -->
               <p>{{ selectedMove?.id }}</p>
               <p>{{ selectedMove?.ativo }}</p>
               <p>{{ selectedMove?.cadastro }}</p>
@@ -124,7 +135,6 @@
               <p>{{ selectedMove?.valorDesconto }}</p>
               <p>{{ selectedMove?.valorTotal }}</p>
             </div>
-
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -132,7 +142,8 @@
         </div>
       </div>
     </div>
-    <!-- Add pagination controls -->
+
+    <!-- Pagination -->
     <div class="pagination-container align-self-end">
       <ul class="pagination">
         <li class="page-item" :class="{ disabled: currentPage === 0 }">
@@ -176,14 +187,15 @@ export default defineComponent({
     };
   },
   created() {
-    if(this.$route.query.licensePlate){
+    // Check if licensePlate exists in the route query and set it as the search query
+    if (this.$route.query.licensePlate) {
       this.searchQuery = this.$route.query.licensePlate.toLocaleString();
-  } 
-},
+    }
+  },
   computed: {
     closeFilter(): Movimentacao[] {
       if (!this.searchQuery && !this.selectedYear && !this.selectedMonth) {
-        return this.moves;
+        return this.moves; // Return all moves if no filters are applied
       } else {
         const lowerCaseQuery = this.searchQuery.toLowerCase();
         return this.moves.filter((move: Movimentacao) => {
@@ -195,6 +207,7 @@ export default defineComponent({
             move.veiculo.placa.toLowerCase().includes(lowerCaseQuery) ||
             move.condutor.nome.toLowerCase().includes(lowerCaseQuery);
 
+          // Apply filters based on selectedYear and selectedMonth
           if (this.selectedYear && this.selectedMonth) {
             return matchesQuery && registerYear === this.selectedYear && registerMonth === this.selectedMonth;
           } else if (this.selectedYear) {
@@ -218,37 +231,38 @@ export default defineComponent({
   },
 
   mounted() {
-    this.fetchMoves();
+    this.fetchMoves(); // Fetch moves on component mount
   },
   methods: {
     async fetchMoves() {
-    try {
-      const pageRequest = new PageRequest();
-      pageRequest.currentPage = this.currentPage;
-      pageRequest.pageSize = this.pageSize;
+      try {
+        const pageRequest = new PageRequest();
+        pageRequest.currentPage = this.currentPage;
+        pageRequest.pageSize = this.pageSize;
 
-      const moveClient = new MovimentacaoClient();
-      const pageResponse: PageResponse<Movimentacao> = await moveClient.findByFiltrosPaginado(pageRequest);
+        const moveClient = new MovimentacaoClient();
+        const pageResponse: PageResponse<Movimentacao> = await moveClient.findByFiltrosPaginado(pageRequest);
 
-      this.moves = pageResponse.content.filter((move: Movimentacao) => {
-        return move.saida !== null;
-      })
-    } catch (error) {
-      console.error(error);
-    }
-  },
+        // Filter out moves where "saida" is null
+        this.moves = pageResponse.content.filter((move: Movimentacao) => {
+          return move.saida !== null;
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    },
 
     previousPage() {
       if (this.currentPage > 0) {
         this.currentPage--;
-        this.fetchMoves();
+        this.fetchMoves(); // Fetch moves for the previous page
       }
     },
 
     nextPage() {
       if (this.closeFilter.length === this.pageSize) {
         this.currentPage++;
-        this.fetchMoves();
+        this.fetchMoves(); // Fetch moves for the next page
       }
     },
 
@@ -268,7 +282,7 @@ export default defineComponent({
       try {
         const moveClient = new MovimentacaoClient();
         await moveClient.delete(move.id);
-        this.moves = this.moves.filter((item) => item.id !== move.id);
+        this.moves = this.moves.filter((item) => item.id !== move.id); // Remove the deleted move from the moves list
       } catch (error) {
         console.error(error);
       }
@@ -278,11 +292,10 @@ export default defineComponent({
       try {
         const moveClient = new MovimentacaoClient();
         const editMoveIds = move.id;
-        await this.$router.push({ name: "edit-closemovement", params: { editCloseId: editMoveIds } });
+        await this.$router.push({ name: "edit-closemovement", params: { editCloseId: editMoveIds } }); // Navigate to the edit-closemovement page with the move ID as a parameter
       } catch (error) {
         console.error(error);
       }
-
     },
 
     async viewItem(move: Movimentacao) {

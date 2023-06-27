@@ -1,12 +1,15 @@
 <template>
   <div class="access-content d-flex flex-column align-items-start justify-content-start">
+    <!-- Header -->
     <div class="header d-flex align-content-start justify-content-between m-0">
-      <p class="title-pages">Access : Open Movements</p>
+      <p class="title-pages">Access: Open Movements</p>
       <div class="search-container">
         <input type="text" class="search-input" placeholder="Search By license plate or name..." v-model="searchQuery" />
-        <i class="bi bi-search search-icon "></i>
+        <i class="bi bi-search search-icon"></i>
       </div>
     </div>
+
+    <!-- Filter -->
     <div class="filter d-flex align-items-center my-4 gap-4 w-100">
       <div class="filter-container d-flex align-items-center gap-2">
         <label for="year-filter">Year:</label>
@@ -23,8 +26,13 @@
           <option v-for="month in 12" :value="month">{{ month }}</option>
         </select>
       </div>
-      <router-link to="/register-movement" class="router"><i class="bi bi-plus-square"></i></router-link>
+
+      <router-link to="/register-movement" class="router">
+        <i class="bi bi-plus-square"></i>
+      </router-link>
     </div>
+
+    <!-- Table -->
     <table class="table table-sm table-bordered w-100">
       <thead>
         <tr>
@@ -48,12 +56,16 @@
           <td>
             <div class="d-flex justify-content-center gap-2">
               <button class="btn btn-sm btn-primary" @click="editItem(open)" style="width: 45px;height: 30px;">
-                <i class="bi bi-pencil-square"></i></button>
+                <i class="bi bi-pencil-square"></i>
+              </button>
               <button class="btn btn-sm btn-danger" @click="deleteItem(open)" style="width: 45px;height: 30px;">
-                <i class="bi bi-trash"></i></button>
+                <i class="bi bi-trash"></i>
+              </button>
               <button class="btn btn-sm btn-success" @click="closeItem(open)" style="width: 45px;height: 30px;">
-                <i class="bi bi-check-circle"></i></button>
-              <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#details" style="width: 45px;height: 30px;color: #fff;font-weight: bold;"  @click="viewItem(open)">
+                <i class="bi bi-check-circle"></i>
+              </button>
+              <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal" data-bs-target="#details"
+                style="width: 45px;height: 30px;color: #fff;font-weight: bold;" @click="viewItem(open)">
                 <i class="bi bi-eye"></i>
               </button>
             </div>
@@ -61,6 +73,7 @@
         </tr>
       </tbody>
     </table>
+
     <!-- Modal -->
     <div class="modal fade" id="details" tabindex="-1" aria-labelledby="details" aria-hidden="true">
       <div class="modal-dialog">
@@ -70,7 +83,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body d-flex justify-content-between align-items-center">
-            <div class="modal-col d-flex flex-column" style="    text-align: start;">
+            <div class="modal-col d-flex flex-column" style="text-align: start;">
               <p>Movement ID :</p>
               <p>Active :</p>
               <p>Registration Date :</p>
@@ -110,7 +123,6 @@
               <hr>
               <p>{{ selectedMove?.entrada }}</p>
             </div>
-            
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -118,8 +130,9 @@
         </div>
       </div>
     </div>
-            <!-- Add pagination controls -->
-            <div class="pagination-container align-self-end">
+
+    <!-- Pagination -->
+    <div class="pagination-container align-self-end">
       <ul class="pagination">
         <li class="page-item" :class="{ disabled: currentPage === 0 }">
           <a class="page-link" href="#" aria-label="Previous" @click="previousPage"
@@ -139,6 +152,7 @@
 </template>
 
 <script lang="ts">
+// Import statements
 import { computed, defineComponent } from "vue";
 import { Movimentacao } from "@/model/movimentacao";
 import { MovimentacaoClient } from "@/client/movimentacao.client";
@@ -151,22 +165,26 @@ export default defineComponent({
   name: "AccessVehicleModelView",
   data() {
     return {
+      // Data properties for the component
       moves: [] as Movimentacao[],
-      searchQuery: '',
+      searchQuery: "",
       selectedYear: null as number | null,
       selectedMonth: null as number | null,
       selectedMove: null as Movimentacao | null,
       currentPage: 0,
-      pageSize: 100,
+      pageSize: 8,
     };
   },
   created() {
-    if(this.$route.query.licensePlate){
+    // Lifecycle hook: created
+    if (this.$route.query.licensePlate) {
       this.searchQuery = this.$route.query.licensePlate.toLocaleString();
-  }
-},
+    }
+  },
   computed: {
+    // Computed properties
     openFilter(): Movimentacao[] {
+      // Computes filtered moves based on search query, year, and month
       if (!this.searchQuery && !this.selectedYear && !this.selectedMonth) {
         return this.moves;
       } else {
@@ -181,7 +199,11 @@ export default defineComponent({
             move.condutor.nome.toLowerCase().includes(lowerCaseQuery);
 
           if (this.selectedYear && this.selectedMonth) {
-            return matchesQuery && registerYear === this.selectedYear && registerMonth === this.selectedMonth;
+            return (
+              matchesQuery &&
+              registerYear === this.selectedYear &&
+              registerMonth === this.selectedMonth
+            );
           } else if (this.selectedYear) {
             return matchesQuery && registerYear === this.selectedYear;
           } else if (this.selectedMonth) {
@@ -193,6 +215,7 @@ export default defineComponent({
       }
     },
     selectableYears(): number[] {
+      // Computes selectable years based on the current year
       const currentYear = new Date().getFullYear();
       const years = [];
       for (let year = 2019; year <= currentYear; year++) {
@@ -200,52 +223,58 @@ export default defineComponent({
       }
       return years;
     },
-
   },
-
   mounted() {
+    // Lifecycle hook: mounted
     this.fetchMoves();
   },
   methods: {
+    // Component methods
     async fetchMoves() {
+      // Fetches moves from the server
       try {
         const pageRequest = new PageRequest();
         pageRequest.currentPage = this.currentPage;
         pageRequest.pageSize = this.pageSize;
 
         const moveClient = new MovimentacaoClient();
-        const pageResponse: PageResponse<Movimentacao> = await moveClient.findByFiltrosPaginado(pageRequest);
-          
+        const pageResponse: PageResponse<Movimentacao> = await moveClient.findByFiltrosPaginado(
+          pageRequest
+        );
+
         this.moves = pageResponse.content.filter((move: Movimentacao) => {
           return move.saida === null;
-        })
+        });
       } catch (error) {
         console.error(error);
       }
     },
-
     previousPage() {
+      // Goes to the previous page of moves
       if (this.currentPage > 0) {
         this.currentPage--;
         this.fetchMoves();
       }
     },
-
     nextPage() {
+      // Goes to the next page of moves
       if (this.openFilter.length === this.pageSize) {
         this.currentPage++;
         this.fetchMoves();
       }
     },
-
     formatDate(dateString: string | number | Date) {
+      // Formats a date string to a localized date and time string
       const dateTime = new Date(dateString);
       const formattedDate = dateTime.toLocaleDateString();
-      const formattedTime = dateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const formattedTime = dateTime.toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      });
       return `${formattedDate} ${formattedTime}`;
     },
-
     async deleteItem(move: Movimentacao) {
+      // Deletes a move
       const confirmation = confirm("Are you sure you want to delete this driver?");
       if (!confirmation) {
         return;
@@ -259,8 +288,8 @@ export default defineComponent({
         console.error(error);
       }
     },
-
     async editItem(move: Movimentacao) {
+      // Edits a move
       try {
         const moveClient = new MovimentacaoClient();
         const editMoveIds = move.id;
@@ -268,25 +297,21 @@ export default defineComponent({
       } catch (error) {
         console.error(error);
       }
-
     },
-
-
-async closeItem(move: Movimentacao) {
-  try {
-    const moveClient = new MovimentacaoClient();
-    const moveId = move.id;
-    await this.$router.push({ name: "register-closemovement", params: { movemId: moveId } });
-    // await moveClient.delete(moveId);
-  } catch (error) {
-    console.error(error);
-  }
-},
-
+    async closeItem(move: Movimentacao) {
+      // Closes a move
+      try {
+        const moveClient = new MovimentacaoClient();
+        const moveId = move.id;
+        await this.$router.push({ name: "register-closemovement", params: { movemId: moveId } });
+      } catch (error) {
+        console.error(error);
+      }
+    },
     async viewItem(move: Movimentacao) {
-      this.selectedMove = move; // Set the selected move for the modal
-
-    }
+      // Sets the selected move for the modal
+      this.selectedMove = move;
+    },
   },
 });
 </script>

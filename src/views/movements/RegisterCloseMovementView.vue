@@ -3,41 +3,62 @@
     <p class="title-pages">Register: Close Movement</p>
     <div class="form-application d-flex flex-column custom-section">
       <form class="form-app d-flex flex-column align-items-start mt-4 h-100 gap-3" @submit.prevent="submitForm">
+
+        <!-- Associated Condutor Field -->
         <div class="d-flex align-items-center align-self-start gap-3">
           <div class="d-flex flex-column">
             <label for="exampleDataList" class="form-label">Associated Condutor</label>
+
+            <!-- Read-only input field for Associated Condutor -->
             <input class="form-control" readonly list="datalistOptions" id="exampleDataList"
               style="width: 300px; color: #909394" v-model="condutorAs" />
           </div>
         </div>
+
+        <!-- Associated Vehicle Field -->
         <div class="d-flex align-items-center align-self-start gap-3">
           <div class="d-flex flex-column">
             <label for="exampleDataList" class="form-label">Associated Vehicle</label>
+
+            <!-- Read-only input field for Associated Vehicle -->
             <input class="form-control" readonly list="datalistOptions" id="exampleDataList"
               style="width: 300px; color: #909394" v-model="veiculoAs" />
           </div>
         </div>
+
+        <!-- Entry Date and Exit Date Fields -->
         <div class="d-flex align-items-center align-self-start gap-3">
           <div class="d-flex flex-column">
             <label for="entry" class="form-label">Entry Date</label>
+
+            <!-- Read-only input field for Entry Date -->
             <input class="form-control" readonly type="datetime-local" id="entry" style="width: 300px; color: #909394"
               v-model="entryAs" />
           </div>
           <div class="d-flex flex-column">
             <label for="exit" class="form-label">Exit Date</label>
+
+            <!-- Input field for Exit Date -->
             <input class="form-control" type="datetime-local" id="exit" style="width: 300px" v-model="move.saida" />
           </div>
         </div>
+
         <!-- Error Message -->
         <div class="mt-3 d-flex align-items-center gap-3">
           <button type="submit">Close Movement</button>
+
+          <!-- Button to show receipt -->
           <button @click="showReceipt(move)" data-bs-toggle="modal" data-bs-target="#details" type="button">Show
             Receipt</button>
-          <p :class="['error-message', errorMessage.status === 'success' ? 'text-success' : 'text-danger']">{{
-            errorMessage.message }}</p>
+
+          <!-- Display Error Message -->
+          <p :class="['error-message', errorMessage.status === 'success' ? 'text-success' : 'text-danger']">
+            {{ errorMessage.message }}
+          </p>
         </div>
       </form>
-      <!-- Modal -->
+
+      <!-- Receipt Modal -->
       <div class="modal fade" id="details" tabindex="-1" aria-labelledby="details" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -46,7 +67,7 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body d-flex justify-content-between align-items-center">
-              <div class="modal-col d-flex flex-column" style="    text-align: start;">
+              <div class="modal-col d-flex flex-column" style="text-align: start;">
                 <p>Active :</p>
                 <p>Registration Date :</p>
                 <hr>
@@ -73,6 +94,7 @@
                 <p>Total Value :</p>
               </div>
               <div class="modal-col d-flex flex-column">
+                <!-- Display receipt details using data from the selectedMove object -->
                 <p>{{ selectedMove?.ativo }}</p>
                 <p>{{ selectedMove?.cadastro }}</p>
                 <hr>
@@ -98,7 +120,6 @@
                 <p>{{ selectedMove?.valorDesconto }}</p>
                 <p>{{ selectedMove?.valorTotal }}</p>
               </div>
-
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -120,24 +141,24 @@ import { defineComponent } from "vue";
 export default defineComponent({
   data() {
     return {
-      condutorAs: "",
-      veiculoAs: "",
-      entryAs: new Date(),
-      move: new Movimentacao(),
+      condutorAs: "", // Stores the value of condutorAs
+      veiculoAs: "", // Stores the value of veiculoAs
+      entryAs: new Date(), // Stores the value of entryAs as the current date
+      move: new Movimentacao(), // Creates a new instance of Movimentacao and stores it in move
       errorMessage: {
         status: "", // Possible values: "success", "error"
-        message: "",
+        message: "", // Stores the error message
       },
-      selectedMove: null as Movimentacao | null,
+      selectedMove: null as Movimentacao | null, // Stores the selected Movimentacao object, initially set to null
     };
   },
   computed: {
     moveClient() {
-      return new MovimentacaoClient();
+      return new MovimentacaoClient(); // Returns a new instance of MovimentacaoClient
     },
   },
   mounted() {
-    this.fetchOpenMovement();
+    this.fetchOpenMovement(); // Fetches the open movement when the component is mounted
   },
   methods: {
     async submitForm() {
@@ -180,17 +201,17 @@ export default defineComponent({
       this.errorMessage.message = message; // Set the message property of the errorMessage object
     },
 
-
     async fetchOpenMovement() {
       try {
         const response = await this.moveClient.findById(Number(this.$route.params.movemId));
-        this.condutorAs = response.condutor.cpf;
-        this.veiculoAs = response.veiculo.placa;
-        this.entryAs = response.entrada;
+        this.condutorAs = response.condutor.cpf; // Assign the CPF of the condutor to condutorAs
+        this.veiculoAs = response.veiculo.placa; // Assign the license plate of the veiculo to veiculoAs
+        this.entryAs = response.entrada; // Assign the entry date of the movement to entryAs
       } catch (error) {
         console.log(error);
       }
     },
+
     async fetchItems() {
       try {
         const veiculoClient = new VeiculoClient();
@@ -198,16 +219,17 @@ export default defineComponent({
         const veiculoData = await veiculoClient.findByPlaca(this.veiculoAs);
         const condutorData = await condutorClient.getByCPF(this.condutorAs);
         if (veiculoData && veiculoData.id) {
-          this.move.veiculo.id = veiculoData.id;
+          this.move.veiculo.id = veiculoData.id; // Assign the ID of the veiculo to move.veiculo.id
         }
         if (condutorData && condutorData.id) {
-          this.move.condutor.id = condutorData.id;
+          this.move.condutor.id = condutorData.id; // Assign the ID of the condutor to move.condutor.id
         }
-        this.move.entrada = this.entryAs;
+        this.move.entrada = this.entryAs; // Assign the entry date to move.entrada
       } catch (error) {
         console.error("Failed to fetch veiculo ID:", error);
       }
     },
+
     async showReceipt(move: Movimentacao) {
       if (move.saida == null) {
         try {
@@ -215,7 +237,6 @@ export default defineComponent({
           const response = await this.moveClient.findById(Number(this.$route.params.movemId));
           this.selectedMove = response;
           console.log(this.selectedMove + "move.saida == null");
-
         } catch (error) {
           console.log(error);
         }
@@ -229,10 +250,8 @@ export default defineComponent({
           console.log(error);
         }
       }
-
     }
   },
-
 });
 </script>
 
