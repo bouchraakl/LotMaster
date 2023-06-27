@@ -1,12 +1,15 @@
 <template>
   <div class="access-content d-flex flex-column align-items-start justify-content-start">
+    <!-- Header section -->
     <div class="header d-flex align-content-start justify-content-between m-0">
       <p class="title-pages">Access : Drivers</p>
+      <!-- Search bar -->
       <div class="search-container">
         <input type="text" class="search-input" placeholder="Search By CPF or name ..." v-model="searchQuery" />
         <i class="bi bi-search search-icon "></i>
       </div>
     </div>
+    <!-- Filter section -->
     <div class="filter d-flex align-items-center my-4 gap-4 w-100">
       <div class="filter-container d-flex align-items-center gap-2">
         <label for="year-filter">Year:</label>
@@ -23,8 +26,10 @@
           <option v-for="month in 12" :value="month">{{ month }}</option>
         </select>
       </div>
+      <!-- Add driver button -->
       <router-link to="/register-conductor" class="router"><i class="bi bi-plus-square"></i></router-link>
     </div>
+    <!-- Driver table -->
     <table class="table table-sm table-bordered w-100">
       <thead>
         <tr>
@@ -51,6 +56,7 @@
           <td>{{ driver.tempoDescontoHoras }}</td>
           <td>
             <div class="d-flex justify-content-center gap-2">
+              <!-- Edit and delete buttons -->
               <button class="btn btn-sm btn-primary" @click="editItem(driver)" style="width: 45px;height: 30px;">
                 <i class="bi bi-pencil-square"></i></button>
               <button class="btn btn-sm btn-danger" @click="deleteItem(driver)" style="width: 45px;height: 30px;">
@@ -60,7 +66,7 @@
         </tr>
       </tbody>
     </table>
-    <!-- Add pagination controls -->
+    <!-- Pagination controls -->
     <div class="pagination-container align-self-end">
       <ul class="pagination">
         <li class="page-item" :class="{ disabled: currentPage === 0 }">
@@ -92,20 +98,23 @@ import { Veiculo } from "@/model/veiculo";
 
 export default defineComponent({
   name: "AccessVehicleModelView",
+
   data() {
     return {
-      drivers: [] as Condutor[],
-      searchQuery: '',
-      selectedYear: null as number | null,
-      selectedMonth: null as number | null,
-      currentPage: 0,
-      pageSize: 5,
+      drivers: [] as Condutor[], // Array to store drivers
+      searchQuery: '', // Search query string
+      selectedYear: null as number | null, // Selected year
+      selectedMonth: null as number | null, // Selected month
+      currentPage: 0, // Current page number
+      pageSize: 5, // Number of items per page
     };
   },
+
   computed: {
+    // Filtered drivers based on search query, selected year, and selected month
     driverFilter(): Condutor[] {
       if (!this.searchQuery && !this.selectedYear && !this.selectedMonth) {
-        return this.drivers;
+        return this.drivers; // No filters applied, return all drivers
       } else {
         const lowerCaseQuery = this.searchQuery.toLowerCase();
         return this.drivers.filter((driver: Condutor) => {
@@ -129,6 +138,8 @@ export default defineComponent({
         });
       }
     },
+
+    // Array of selectable years
     selectableYears(): number[] {
       const currentYear = new Date().getFullYear();
       const years = [];
@@ -140,9 +151,11 @@ export default defineComponent({
   },
 
   mounted() {
-    this.fetchDriver();
+    this.fetchDriver(); // Fetch drivers when the component is mounted
   },
+
   methods: {
+    // Fetch drivers from the server
     async fetchDriver() {
       try {
         const pageRequest = new PageRequest();
@@ -151,26 +164,29 @@ export default defineComponent({
 
         const conductorClient = new CondutorClient();
         const pageResponse: PageResponse<Condutor> = await conductorClient.findByFiltrosPaginado(pageRequest);
-        this.drivers = pageResponse.content;
+        this.drivers = pageResponse.content; // Store the fetched drivers in the component data
       } catch (error) {
         console.error(error);
       }
     },
 
+    // Go to the previous page of drivers
     previousPage() {
       if (this.currentPage > 0) {
         this.currentPage--;
-        this.fetchDriver();
+        this.fetchDriver(); // Fetch drivers for the previous page
       }
     },
 
+    // Go to the next page of drivers
     nextPage() {
       if (this.driverFilter.length === this.pageSize) {
         this.currentPage++;
-        this.fetchDriver();
+        this.fetchDriver(); // Fetch drivers for the next page
       }
     },
 
+    // Format a date string to a formatted date and time string
     formatDate(dateString: string | number | Date) {
       const dateTime = new Date(dateString);
       const formattedDate = dateTime.toLocaleDateString();
@@ -178,6 +194,7 @@ export default defineComponent({
       return `${formattedDate} ${formattedTime}`;
     },
 
+    // Delete a driver
     async deleteItem(driver: Condutor) {
       const confirmation = confirm("Are you sure you want to delete this driver?");
       if (!confirmation) {
@@ -187,17 +204,17 @@ export default defineComponent({
       try {
         const driverClient = new CondutorClient();
         await driverClient.delete(driver.id);
-        this.drivers = this.drivers.filter((item) => item.id !== driver.id);
+        this.drivers = this.drivers.filter((item) => item.id !== driver.id); // Remove the deleted driver from the drivers array
       } catch (error) {
         console.error(error);
       }
     },
 
+    // Edit a driver
     async editItem(driver: Condutor) {
       const conductorClient = new CondutorClient();
       const editCondutorIds = driver.id;
-      await this.$router.push({ name: "edit-conductor", params: { editConductorId : editCondutorIds } });
-
+      await this.$router.push({ name: "edit-conductor", params: { editConductorId: editCondutorIds } });
     }
   },
 });
