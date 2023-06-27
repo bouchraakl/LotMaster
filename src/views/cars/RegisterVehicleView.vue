@@ -81,6 +81,7 @@ import { defineComponent } from "vue";
 export default defineComponent({
   data() {
     return {
+      // Initialize the data properties
       vehicle: new Veiculo(),
       vehicles: [] as Veiculo[],
       datalistOptions: [] as string[],
@@ -95,13 +96,13 @@ export default defineComponent({
   },
   async mounted() {
     try {
+      // Fetch vehicle data and populate datalist options
       const modelClient = new ModeloClient();
       const vehicleData = await modelClient.findAll();
       this.datalistOptions = vehicleData.map((model) => model.nome);
     } catch (error) {
       console.error("Failed to fetch vehicle data:", this.datalistOptions);
     }
-  
   },
   watch: {
     'vehicle.modelo.nome': {
@@ -137,6 +138,7 @@ export default defineComponent({
 
     async fetchModelsId() {
       try {
+        // Fetch model ID based on the selected model name
         const modelClient = new ModeloClient();
         const modelData = await modelClient.findByNome(
           this.vehicle.modelo.nome
@@ -159,12 +161,13 @@ export default defineComponent({
 
       if (associatedModel) {
         try {
+          // Fetch associated brand based on the selected model name
           const brandData = await modelClient.findByNome(associatedModel);
           console.log(brandData);
           if (brandData && brandData.marca && brandData.marca.nome) {
             this.vehicle.modelo.marca = brandData.marca;
             this.vehicle.modelo.marca.nome = brandData.marca.nome;
-this.ascBrand = brandData.marca.nome;
+            this.ascBrand = brandData.marca.nome;
           } else {
             console.error("Brand not found");
           }
@@ -173,10 +176,10 @@ this.ascBrand = brandData.marca.nome;
         }
       }
     },
-
   },
 });
 </script>
+
 
 
 <style scoped>

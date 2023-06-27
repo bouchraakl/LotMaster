@@ -1,13 +1,16 @@
 <template>
   <div class="access-content d-flex flex-column align-items-start justify-content-start">
+    <!-- Header -->
     <div class="header d-flex align-content-start justify-content-between m-0">
       <p class="title-pages">Access : Vehicles</p>
       <div class="search-container">
         <input type="text" class="search-input" placeholder="Search By License Plate or names ..."
           v-model="searchQuery" />
-        <i class="bi bi-search search-icon "></i>
+        <i class="bi bi-search search-icon"></i>
       </div>
     </div>
+
+    <!-- Filters -->
     <div class="filter d-flex align-items-center my-4 gap-4 w-100">
       <div class="filter-container d-flex align-items-center gap-2">
         <label for="year-filter">Year</label>
@@ -42,6 +45,8 @@
       </div>
       <router-link to="/register-vehicle" class="router"><i class="bi bi-plus-square"></i></router-link>
     </div>
+
+    <!-- Vehicle List -->
     <table class="table table-sm table-bordered w-100">
       <thead>
         <tr>
@@ -58,7 +63,7 @@
       </thead>
       <tbody>
         <tr v-for="car in carFilter" :key="car.id">
-          <td> {{ car.id }} </td>
+          <td>{{ car.id }}</td>
           <td>{{ car.ativo }}</td>
           <td>{{ formatDate(car.cadastro) }}</td>
           <td>{{ car.placa }}</td>
@@ -69,27 +74,30 @@
           <td>{{ car.cor }}</td>
           <td>
             <div class="d-flex justify-content-center gap-2">
-              <button class="btn btn-sm btn-primary" @click="editItem(car)" style="width: 45px;height: 30px;">
-                <i class="bi bi-pencil-square"></i></button>
-              <button class="btn btn-sm btn-danger" @click="deleteItem(car)" style="width: 45px;height: 30px;">
-                <i class="bi bi-trash"></i> Delete </button>
+              <button class="btn btn-sm btn-primary" @click="editItem(car)" style="width: 45px; height: 30px;">
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <button class="btn btn-sm btn-danger" @click="deleteItem(car)" style="width: 45px; height: 30px;">
+                <i class="bi bi-trash"></i> Delete
+              </button>
             </div>
           </td>
         </tr>
       </tbody>
     </table>
-    <!-- Add pagination controls -->
+
+    <!-- Pagination controls -->
     <div class="pagination-container align-self-end">
       <ul class="pagination">
         <li class="page-item" :class="{ disabled: currentPage === 0 }">
           <a class="page-link" href="#" aria-label="Previous" @click="previousPage"
-            style="color: #3C3C43;background-color: #B5C2C9;">
+            style="color: #3C3C43; background-color: #B5C2C9;">
             <span aria-hidden="true">&laquo;</span>
           </a>
         </li>
         <li class="page-item" :disabled="carFilter.length < pageSize">
           <a class="page-link" href="#" aria-label="Next" @click="nextPage"
-            style="color: #3C3C43;background-color: #B5C2C9;">
+            style="color: #3C3C43; background-color: #B5C2C9;">
             <span aria-hidden="true">&raquo;</span>
           </a>
         </li>
@@ -115,7 +123,7 @@ export default defineComponent({
   data() {
     return {
       cars: [] as Veiculo[],
-      searchQuery: '',
+      searchQuery: "",
       selectedYear: null as number | null,
       selectedMonth: null as number | null,
       selectedTipo: null as Tipo | null,
@@ -126,7 +134,13 @@ export default defineComponent({
   },
   computed: {
     carFilter(): Veiculo[] {
-      if (!this.searchQuery && !this.selectedYear && !this.selectedMonth && !this.selectedTipo && !this.selectedCores) {
+      if (
+        !this.searchQuery &&
+        !this.selectedYear &&
+        !this.selectedMonth &&
+        !this.selectedTipo &&
+        !this.selectedCores
+      ) {
         return this.cars;
       } else {
         const lowerCaseQuery = this.searchQuery.toLowerCase();
@@ -145,7 +159,13 @@ export default defineComponent({
           const matchesCarro = !this.selectedCores || car.cor === this.selectedCores;
 
           if (this.selectedYear && this.selectedMonth) {
-            return matchesQuery && registerYear === this.selectedYear && registerMonth === this.selectedMonth && matchesTipo && matchesCarro;
+            return (
+              matchesQuery &&
+              registerYear === this.selectedYear &&
+              registerMonth === this.selectedMonth &&
+              matchesTipo &&
+              matchesCarro
+            );
           } else if (this.selectedYear) {
             return matchesQuery && registerYear === this.selectedYear && matchesTipo && matchesCarro;
           } else if (this.selectedMonth) {
@@ -171,18 +191,18 @@ export default defineComponent({
       return tipos.map((tipo) => tipo.toUpperCase());
     },
 
-
     availableCores(): string[] {
       const cores = Object.values(Cor);
       return cores.map((core) => core.toUpperCase());
     },
-
   },
 
   mounted() {
     this.fetchCar();
   },
+
   methods: {
+    // Fetches car data from the API
     async fetchCar() {
       try {
         const pageRequest = new PageRequest();
@@ -197,6 +217,7 @@ export default defineComponent({
       }
     },
 
+    // Goes to the previous page of car results
     previousPage() {
       if (this.currentPage > 0) {
         this.currentPage--;
@@ -204,6 +225,7 @@ export default defineComponent({
       }
     },
 
+    // Goes to the next page of car results
     nextPage() {
       if (this.carFilter.length === this.pageSize) {
         this.currentPage++;
@@ -211,13 +233,15 @@ export default defineComponent({
       }
     },
 
+    // Formats the date string in the desired format
     formatDate(dateString: string | number | Date) {
       const dateTime = new Date(dateString);
       const formattedDate = dateTime.toLocaleDateString();
-      const formattedTime = dateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const formattedTime = dateTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
       return `${formattedDate} ${formattedTime}`;
     },
 
+    // Deletes a car from the list
     async deleteItem(car: Veiculo) {
       const confirmation = confirm("Are you sure you want to delete this vehicle modelo?");
       if (!confirmation) {
@@ -233,12 +257,12 @@ export default defineComponent({
       }
     },
 
+    // Redirects to the edit page for a specific car
     async editItem(car: Veiculo) {
       const carClient = new VeiculoClient();
       const editVehicleIds = car.id;
-      await this.$router.push({ name: "edit-vehicle", params: { editVehicleId : editVehicleIds } });
-
-    }
+      await this.$router.push({ name: "edit-vehicle", params: { editVehicleId: editVehicleIds } });
+    },
   },
 });
 </script>
@@ -247,5 +271,43 @@ export default defineComponent({
 .header {
   margin-left: 30px;
   width: 100%;
+}
+
+.filter {
+  margin-left: 30px;
+}
+
+.filter-container {
+  display: flex;
+  align-items: center;
+}
+
+.search-container {
+  position: relative;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  color: #6c757d;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.search-input {
+  width: 300px;
+  padding: 0.375rem 2.375rem 0.375rem 0.75rem;
+}
+
+.pagination-container {
+  margin-top: 20px;
+  margin-right: 30px;
+}
+
+.router {
+  text-decoration: none;
+  color: white;
 }
 </style>
