@@ -30,7 +30,7 @@ export class ModeloClient {
 
     public async findByNome(nome: string): Promise<Modelo> {
         try {
-          const response = await axios.get<Modelo>(`http://localhost:8081/api/modelo/nome?nome=${nome}`)
+          const response = await axios.get<Modelo>(`http://localhost:8081/api/modelo/nome/${nome}`)
       
           return response.data;
 

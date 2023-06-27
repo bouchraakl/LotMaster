@@ -71,10 +71,10 @@
         <div class="footer d-flex flex-column align-self-start">
           <p class="footerTitle">Total Day Win</p>
           <div class="gainsMoney d-flex justify-content-between align-items-center gap-3">
-  <span class="moneyGain">${{ dayGain.toFixed(2) }}</span>
-  <i :class="{'bi bi-arrow-down-up': previousDayGain == dayGain, 'bi bi-arrow-down-up text-success': previousDayGain < dayGain, 'bi bi-arrow-down-up text-danger': previousDayGain > dayGain}"></i>
-</div>
-
+            <span class="moneyGain">${{ dayGain.toFixed(2) }}</span>
+            <i
+              :class="{ 'bi bi-arrow-down-up': previousDayGain == dayGain, 'bi bi-arrow-down-up text-success': previousDayGain < dayGain, 'bi bi-arrow-down-up text-danger': previousDayGain > dayGain }"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -178,9 +178,8 @@ export default defineComponent({
         this.previousDayGain = gain;
       }
 
-
-  },
-}
+    },
+  }
 });
 </script>
 

@@ -127,7 +127,7 @@ td {
   color: #888;
 }
 
-.router{
+.router {
   text-decoration: none;
   font-size: 25px;
   margin-left: auto;
