@@ -1,12 +1,17 @@
 <template>
     <div class="main-content">
+        <!-- Header -->
         <div class="header d-flex align-items-center justify-content-between">
             <div class="sub-header d-flex flex-column">
                 <p class="title m-0">Settings</p>
                 <p class="sub-title">Complete System Configuration</p>
             </div>
         </div>
+
+        <!-- Form -->
         <form action="" class="form-app d-flex flex-column align-items-start mt-4 gap-3" @submit.prevent="submitForm">
+
+            <!-- Opening and Closing Time Inputs -->
             <div class="d-flex align-items-center gap-4">
                 <div class="d-flex flex-column align-items-start gap-1">
                     <label for="openTime" class="form-label">Opening time:</label>
@@ -19,6 +24,8 @@
                         style="width: 300px;">
                 </div>
             </div>
+
+            <!-- Hourly Rate and Minute Fine Value Inputs -->
             <div class="d-flex align-items-center gap-5">
                 <div class="d-flex flex-column align-items-start justify-content-between gap-1">
                     <label for="hourRate" class="form-label" style="width: 130px;">Hourly Rate:</label>
@@ -39,6 +46,8 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Discount Time Threshold, Discount Duration, and Generate Discount Checkbox Inputs -->
             <div class="d-flex align-items-center gap-5">
                 <div class="d-flex flex-column align-items-start justify-content-between gap-1">
                     <label for="discountthreshold" class="form-label" style="width: 190px;">Discount time threshold:</label>
@@ -58,6 +67,8 @@
                     </label>
                 </div>
             </div>
+
+            <!-- Car, Motorcycle, and Van Parking Spots Inputs -->
             <div class="d-flex align-items-center gap-5">
                 <div class="d-flex flex-column align-items-start justify-content-between gap-1">
                     <label for="carSpots" class="form-label">Car parking spots:</label>
@@ -74,16 +85,12 @@
                     <input type="number" class="form-control" id="vanSpots" style="width: 300px;" v-model="config.vagasVan">
                 </div>
             </div>
+
             <!-- Error Message -->
             <div class="mt-3 d-flex align-items-center gap-3">
                 <button type="submit" style="width: 300px;">Register New Configurations</button>
                 <button type="button" @click="cancelEdit">Cancel</button>
-                <p :class="[
-                    'error-message',
-                    errorMessage.status === 'success'
-                        ? 'text-success'
-                        : 'text-danger',
-                ]">
+                <p :class="['error-message', errorMessage.status === 'success' ? 'text-success' : 'text-danger']">
                     {{ errorMessage.message }}
                 </p>
             </div>
@@ -112,6 +119,9 @@ export default defineComponent({
             return new ConfiguracaoClient();
         },
     },
+    mounted() {
+        this.fetchConfig();
+    },
     methods: {
         async submitForm() {
             try {
@@ -131,36 +141,58 @@ export default defineComponent({
             }
         },
         cancelEdit() {
-        this.$router.push("/controle");
-      },
+            this.$router.push("/controle");
+        },
+        async fetchConfig() {
+            const configId = Number(this.$route.params.editConfigId);
+            if (!isNaN(configId)) {
+                try {
+                    const response = await this.configClient.findById(configId);
+                    this.config.vagasVan = response.vagasVan;
+                    this.config.vagasMoto = response.vagasMoto;
+                    this.config.vagasCarro = response.vagasCarro;
+                    this.config.tempoParaDesconto = response.tempoParaDesconto;
+                    this.config.tempoDeDesconto = response.tempoDeDesconto;
+                    this.config.inicioExpediente = response.inicioExpediente;
+                    this.config.gerarDesconto = response.gerarDesconto;
+                    this.config.fimExpediente = response.fimExpediente;
+                    this.config.valorHora = response.valorHora;
+                    this.config.valorMinutoMulta = response.valorMinutoMulta;
+                    // this.editedBrand = response; // Populate the editedBrand object
+                    console.log(response);
+                } catch (error) {
+                    console.log(error);
+                }
+            } else {
+                console.log("Invalid editConfigId parameter");
+            }
+        }
     },
-
-
 });
 </script>
 
 <style scoped>
-form{
-  height: fit-content;
+form {
+    height: fit-content;
 }
+
 .title {
-  font-family: Nunito;
-  font-size: 25px;
-  font-weight: 400;
-  text-align: left;
+    font-family: Nunito;
+    font-size: 25px;
+    font-weight: 400;
+    text-align: left;
 }
 
 .sub-title {
-  font-family: Raleway;
-  font-size: 16px;
-  font-weight: 500;
-  text-align: left;
-  color: #959595;
+    font-family: Raleway;
+    font-size: 16px;
+    font-weight: 500;
+    text-align: left;
+    color: #959595;
 }
 
 i {
-  font-size: 20px;
-  margin-right: 30px;
-  cursor: pointer;
-}
-</style>
+    font-size: 20px;
+    margin-right: 30px;
+    cursor: pointer;
+}</style>

@@ -1,13 +1,17 @@
 <template>
   <div class="main-content">
+    <!-- Header section -->
     <div class="header d-flex align-items-center justify-content-between">
       <div class="sub-header d-flex flex-column">
         <p class="title m-0">Settings</p>
         <p class="sub-title">Complete System Configuration</p>
       </div>
-      <i class="bi bi-pencil-square"  @click="editItem()"></i>
+      <i class="bi bi-pencil-square" @click="editItem()"></i> <!-- Edit button -->
     </div>
+
+    <!-- Configuration form -->
     <form action="" class="form-app d-flex flex-column align-items-start mt-4 gap-3">
+      <!-- Opening and closing time fields -->
       <div class="d-flex align-items-center gap-4">
         <div class="d-flex flex-column align-items-start gap-1">
           <label for="openTime" class="form-label">Opening time:</label>
@@ -18,6 +22,8 @@
           <input type="text" class="form-control" id="closeTime" disabled v-model="closeTimeValue" style="width: 300px;">
         </div>
       </div>
+
+      <!-- Hourly rate and minute fine fields -->
       <div class="d-flex align-items-center gap-5">
         <div class="d-flex flex-column align-items-start justify-content-between gap-1">
           <label for="hourRate" class="form-label" style="width: 130px;">Hourly Rate:</label>
@@ -38,6 +44,8 @@
           </div>
         </div>
       </div>
+
+      <!-- Discount threshold, duration, and generate discount fields -->
       <div class="d-flex align-items-center gap-5">
         <div class="d-flex flex-column align-items-start justify-content-between gap-1">
           <label for="discountthreshold" class="form-label" style="width: 190px;">Discount time threshold:</label>
@@ -57,6 +65,8 @@
           </label>
         </div>
       </div>
+
+      <!-- Car, motorcycle, and van parking spots fields -->
       <div class="d-flex align-items-center gap-5">
         <div class="d-flex flex-column align-items-start justify-content-between gap-1">
           <label for="carSpots" class="form-label">Car parking spots:</label>
@@ -76,7 +86,6 @@
   </div>
 </template>
 
-  
 <script lang="ts">
 import { ConfiguracaoClient } from '@/client/configuracao.client';
 import { Configuracao } from '@/model/configuracao';
@@ -96,28 +105,27 @@ export default defineComponent({
       carSpotsValue: Number(),
       motoSpotsValue: Number(),
       vanSpotsValue: Number(),
-
     };
   },
-  mounted(){
+  mounted() {
     this.fetchConfig();
   },
   methods: {
-    async fetchConfig(){
+    async fetchConfig() {
       try {
         const configClient = new ConfiguracaoClient();
-         const response = await configClient.findByLast();
-         console.log(response)
-         this.openTimeValue = response.inicioExpediente;
-         this.closeTimeValue = response.fimExpediente;
-         this.hourRateValue = response.valorHora;
-         this.fineMinuteValue = response.valorMinutoMulta;
-          this.discountThresholdValue = response.tempoParaDesconto;
-          this.discountDurationValue = response.tempoDeDesconto;
-          this.generateDiscountValue = response.gerarDesconto;
-          this.carSpotsValue = response.vagasCarro;
-          this.motoSpotsValue = response.vagasMoto;
-          this.vanSpotsValue = response.vagasVan;
+        const response = await configClient.findByLast();
+        console.log(response);
+        this.openTimeValue = response.inicioExpediente;
+        this.closeTimeValue = response.fimExpediente;
+        this.hourRateValue = response.valorHora;
+        this.fineMinuteValue = response.valorMinutoMulta;
+        this.discountThresholdValue = response.tempoParaDesconto;
+        this.discountDurationValue = response.tempoDeDesconto;
+        this.generateDiscountValue = response.gerarDesconto;
+        this.carSpotsValue = response.vagasCarro;
+        this.motoSpotsValue = response.vagasMoto;
+        this.vanSpotsValue = response.vagasVan;
       } catch (error) {
         console.error(error);
       }
@@ -126,26 +134,25 @@ export default defineComponent({
       try {
         const configClient = new ConfiguracaoClient();
         const response = await configClient.findByLast();
-        if(response){
+        if (response) {
           const editConfigIds = response.id;
-        await this.$router.push({ name: "edit-config", params: { editConfigId: editConfigIds } });
-        }
-        else{
+          await this.$router.push({ name: "edit-config", params: { editConfigId: editConfigIds } });
+        } else {
           await this.$router.push({ name: "edit-config", params: { editConfigId: 0 } });
         }
       } catch (error) {
         console.error(error);
       }
     },
-  }
+  },
 });
 </script>
 
-
 <style scoped>
-form{
+form {
   height: fit-content;
 }
+
 .title {
   font-family: Nunito;
   font-size: 25px;
@@ -165,6 +172,5 @@ i {
   font-size: 20px;
   margin-right: 30px;
   cursor: pointer;
-
-}</style>
-  
+}
+</style>
